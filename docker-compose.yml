@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+
+  sql-client:
+    image: flink:1.18.0-scala_2.12
+    container_name: 'sql-client'
+    command: bin/sql-client.sh
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        rest.address: jobmanager        
+    volumes:
+      - ./host:/host
+      - ./settings/:/settings
+
+  jobmanager:
+    container_name: 'jobmanager'
+    image: flink:1.18.0-scala_2.12-java17
+    ports:
+      - "8081:8081"
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        cp /host/jars/*.jar /opt/flink/lib/ 
+        echo 'Copied /host/jars into /opt/flink/lib' 
+        /docker-entrypoint.sh jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+    volumes:
+      - ./host:/host
+      - ./settings/:/settings
+      - ./data/:/data
+
+  taskmanager:
+    container_name: 'taskmanager'
+    image: flink:1.18.0-scala_2.12-java17
+    depends_on:
+      - jobmanager
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        cp /host/jars/*.jar /opt/flink/lib/ 
+        echo 'Copied /host/jars into /opt/flink/lib' 
+        /docker-entrypoint.sh taskmanager
+    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 10
+    volumes:
+      - ./host:/host
+      - ./settings/:/settings
+      - ./data/:/data
