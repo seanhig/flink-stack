@@ -4,7 +4,13 @@ services:
   sql-client:
     image: flink:1.18.0-scala_2.12
     container_name: 'sql-client'
-    command: bin/sql-client.sh
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        cp /host/jars/*.jar /opt/flink/lib/ 
+        echo 'Copied /host/jars into /opt/flink/lib' 
+        bin/sql-client.sh
     environment:
       - |
         FLINK_PROPERTIES=
@@ -52,7 +58,7 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 10
+        taskmanager.numberOfTaskSlots: 100
     volumes:
       - ./host:/host
       - ./settings/:/settings
