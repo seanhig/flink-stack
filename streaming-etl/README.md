@@ -1,51 +1,12 @@
 # Streaming ETL - MySQL and PostgrSQL Sources -> MySQL Target
-This example uses CDC to capture changes on source MySQL and PostgreSQL tables, and joins them to create a new target table in another MySQL database.  Changes are replicated in real-time to the target table.  The job is defined using only `Flink-SQL`.
-
-This represents an agile approach to data integration and movement, while enabling an `Event Driven Architecture`.  The `Streaming ETL + CDC` model enables incremental adoption of eventing as consumers can listen in on active streams for change events.
-
-__Extraction__ is handled by the CDC mechanism and is delivered a real-time stream of change.
-
-__Transformation__ is accomplished using simple `SQL` statements which are easily versioned and managed in a central integration Git repository.  For complex transformations jobs can be developed using `Java`, but most can be developed using plain old `SQL` syntax.
-
-__Loading__ is handled by the JDBC `sink` streams.
-
-Everything is declarative (short of customzied `Java` based jobs), and can be easily version controlled and managed in a `GitOps` style.
-
-When combined with [The Flink Kubernetes Operator](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-main/) it offers a compelling and powerful integration and ETL platform.
+This example uses CDC to capture changes on source MySQL and PostgreSQL tables, and joins them to create a new target table in another MySQL database.  Changes are replicated in real-time to the target table.  The job is defined using only `Flink-SQL` (no custom Java code).
 
 ## Requirements
 
 - MySQL and PostgreSQL servers.  The [database-stack](https://github.com/seanhig/database-stack) was used in this example and works nicely.
 - A running `flink-stack`
+- Azure Data Studio or any other client that can connect to MySQL and PostgreSQL.
 - Bash 
-
-## Setup
-
-Download the following `jar` files and place them in the `host/jars` folder before laumching the `flink-stack`:
-
-[Flink Connectors for CDC](https://github.com/ververica/flink-cdc-connectors/releases/)
-
-    flink-cdc-dist-3.0.0.jar
-    flink-cdc-pipeline-connector-mysql-3.0.0.jar 
-    flink-sql-connector-sqlserver-cdc-3.0.0.jar  
-    flink-sql-connector-mysql-cdc-3.0.0.jar      
-    flink-sql-connector-postgres-cdc-3.0.0.jar   
-    flink-sql-connector-oracle-cdc-3.0.0.jar     
-
-[Flink Connector for JDBC](https://mvnrepository.com/artifact/org.apache.flink/)
-
-    flink-connector-jdbc_2.12)
-    flink-connector-jdbc_2.12-1.14.6.jar         
-
-
-[JDBC Drivers](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/jdbc/)
-
-    mysql-connector-j-8.3.0.jar
-    ojdbc10-19.21.0.0.jar
-    mssql-jdbc-12.4.2.jre11.jar                  
-    mssql-jdbc-12.4.2.jre8.jar
-    postgresql-42.7.1.jar
-
 
 ## MySQL
 

@@ -58,7 +58,7 @@ CREATE TABLE shipments (
  );
 
 
- -- Flink SQL to define the target enriched_orders table in the MySQL operational_datastore
+ -- Flink SQL to define the target enriched_orders table in the MySQL operations
 CREATE TABLE enriched_orders (
    order_id INT,
    order_date TIMESTAMP(3),
@@ -75,7 +75,7 @@ CREATE TABLE enriched_orders (
    PRIMARY KEY (order_id) NOT ENFORCED
   ) WITH (
     'connector.type' = 'jdbc',
-    'connector.url' = 'jdbc:mysql://host.docker.internal:3306/operational_datastore',
+    'connector.url' = 'jdbc:mysql://host.docker.internal:3306/operations',
     'connector.username' = 'root',
     'connector.password' = 'Fender2000',
     'connector.table' = 'enriched_orders'
@@ -90,3 +90,33 @@ INSERT INTO enriched_orders
  FROM orders AS o
  LEFT JOIN products AS p ON o.product_id = p.id
  LEFT JOIN shipments AS s ON o.order_id = s.order_id;
+
+
+-- Flink SQL to define the target enriched_orders_dl table in apache parquet format
+
+DROP TABLE enriched_orders_dl;
+CREATE TABLE enriched_orders_dl (
+   order_id INT,
+   order_date TIMESTAMP(3),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+  ) WITH (
+    'connector' = 'filesystem',
+    'path' = 'file:///data/',
+    'format' = 'parquet'
+  );
+
+-- Sets the job name for the any SQL that follows
+SET 'pipeline.name' = 'Parquet-orders-dl';
+
+-- Creates a one time batch ETL job to provide a parquet dump of enriched_orders_dl table
+INSERT INTO enriched_orders_dl SELECT * FROM enriched_orders;

@@ -2,7 +2,7 @@ version: "3.8"
 services:
 
   sql-client:
-    image: flink:1.18.0-scala_2.12
+    image: local/flink-stack:latest
     container_name: 'sql-client'
     command: 
       - /bin/sh
@@ -15,20 +15,29 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        rest.address: jobmanager        
+        rest.address: jobmanager     
+        high-availability.type: zookeeper
+        high-availability.zookeeper.quorum: zk:2181
+        high-availability.zookeeper.path.root: /flink
+        high-availability.cluster-id: /cluster_one
+        high-availability.storageDir: file:///data/recovery      
+
     volumes:
       - ./host:/host
-      - ./settings/:/settings
 
   jobmanager:
     container_name: 'jobmanager'
-    image: flink:1.18.0-scala_2.12-java17
+    image: local/flink-stack:latest
     ports:
       - "8081:8081"
+      - "6123:6123"
     command: 
       - /bin/sh
       - -c
       - |
+        mkdir -p /data/rocksdb/checkpoint
+        mkdir -p /data/rocksdb/data
+        mkdir -p /data/recovery
         cp /host/jars/*.jar /opt/flink/lib/ 
         echo 'Copied /host/jars into /opt/flink/lib' 
         /docker-entrypoint.sh jobmanager
@@ -36,14 +45,22 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
+        state.backend: rocksdb
+        state.backend.rocksdb.timer-service.factory: ROCKSDB
+        state.checkpoints.dir: file:///data/rocksdb/checkpoint
+        state.backend.rocksdb.localdir: file:///data/rocksdb/data
+        state.backend.incremental: true
+        high-availability.type: zookeeper
+        high-availability.zookeeper.quorum: zk:2181
+        high-availability.zookeeper.path.root: /flink
+        high-availability.cluster-id: /cluster_one
+        high-availability.storageDir: file:///data/recovery      
     volumes:
       - ./host:/host
-      - ./settings/:/settings
       - ./data/:/data
 
   taskmanager:
-    container_name: 'taskmanager'
-    image: flink:1.18.0-scala_2.12-java17
+    image: local/flink-stack:latest
     depends_on:
       - jobmanager
     command: 
@@ -59,7 +76,42 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 100
+        high-availability.type: zookeeper
+        high-availability.zookeeper.quorum: zk:2181
+        high-availability.zookeeper.path.root: /flink
+        high-availability.cluster-id: /cluster_one
+        high-availability.storageDir: file:///data/recovery      
     volumes:
       - ./host:/host
-      - ./settings/:/settings
       - ./data/:/data
+
+  zk:
+    image: zookeeper:3.7.0
+    restart: always
+    container_name: zk
+    hostname: zk
+    ports:
+      - "2181:2181"
+      - "7001:7000"
+    volumes:
+      - zookeeper_log:/logs
+      - zookeeper_data:/data
+      - zookeeper_datalog:/datalog
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      placement:
+        constraints: 
+          - "node.role == manager"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zk:2888:3888;2181 
+      ZOO_4LW_COMMANDS_WHITELIST: mntr, conf, ruok
+
+
+volumes:
+  zookeeper_data:
+  zookeeper_datalog:
+  zookeeper_log:

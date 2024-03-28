@@ -1,0 +1,140 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.flink.app</groupId>
+  <artifactId>flink-stack</artifactId>
+  <version>1.0-SNAPSHOT</version>
+ 
+  <name>flink-stack</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+ 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <flink.version>3.0.0</flink.version>
+  </properties>
+ 
+  <dependencies>
+    
+    <dependency>
+      <artifactId>flink-cdc-pipeline-connector-doris</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-cdc-pipeline-connector-mysql</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-db2-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-mongodb-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-mysql-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-oracle-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-postgres-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-sqlserver-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-connector-jdbc_2.12</artifactId>
+        <version>1.14.6</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <artifactId>ojdbc10</artifactId>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <version>19.22.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <version>12.6.1.jre11</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <version>8.3.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.7.3</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-parquet</artifactId>
+        <version>1.19.0</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-parquet</artifactId>
+        <version>1.19.0</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-avro</artifactId>
+        <version>1.19.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-orc</artifactId>
+        <version>1.19.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-streaming-java</artifactId>
+        <version>1.19.0</version>
+        <scope>provided</scope>
+    </dependency>
+
+  </dependencies>
+ 
+  <build>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    </pluginManagement>
+  </build>
+</project>

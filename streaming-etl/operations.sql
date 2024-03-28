@@ -1,6 +1,6 @@
--- MySQL
-CREATE DATABASE operational_datastore;
-USE operational_datastore;
+-- MySQL target 
+CREATE DATABASE operations;
+USE operations;
 
 CREATE TABLE enriched_orders (
   order_id INTEGER NOT NULL PRIMARY KEY,
