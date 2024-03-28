@@ -16,11 +16,6 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         rest.address: jobmanager     
-        high-availability.type: zookeeper
-        high-availability.zookeeper.quorum: zk:2181
-        high-availability.zookeeper.path.root: /flink
-        high-availability.cluster-id: /cluster_one
-        high-availability.storageDir: file:///data/recovery      
 
     volumes:
       - ./host:/host
