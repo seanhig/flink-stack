@@ -120,3 +120,42 @@ SET 'pipeline.name' = 'Parquet-orders-dl';
 
 -- Creates a one time batch ETL job to provide a parquet dump of enriched_orders_dl table
 INSERT INTO enriched_orders_dl SELECT * FROM enriched_orders;
+
+
+CREATE CATALOG docker_catalog WITH(
+    'type' = 'jdbc',
+    'default-database' = 'flink',
+    'username' = 'postgres',
+    'password' = 'Fender2000',
+    'base-url' = 'jdbc:postgresql://host.docker.internal:5432'
+);
+
+USE CATALOG docker_catalog;
+
+CREATE DATABASE localdb;
+
+USE localdb;
+
+
+CREATE CATALOG iceberg_jdbc WITH (
+   'type' = 'iceberg',
+   'io-impl' = 'org.apache.iceberg.aws.s3.S3FileIO',
+   'warehouse' = 's3://warehouse',
+   's3.endpoint' = 'http://minio:9000',
+   's3.path-style-access' = 'true',
+   'catalog-impl' = 'org.apache.iceberg.jdbc.JdbcCatalog',
+   'uri' ='jdbc:postgresql://host.docker.internal:5435/?user=dba&password=rules');
+
+CREATE DATABASE `iceberg_jdbc`.db01;
+
+USE `iceberg_jdbc`.db01;
+CREATE TABLE t_foo (c1 varchar, c2 int);
+INSERT INTO t_foo VALUES ('a',42);
+
+
+SET 'execution.runtime-mode' = 'batch';
+SET 'sql-client.execution.result-mode' = 'tableau';
+
+-- Wait a few moments; running this straightaway often doesn't show
+-- the results
+SELECT * FROM t_foo;

@@ -1,1 +1,1 @@
-docker-compose run sql-client
+docker compose run sql-client

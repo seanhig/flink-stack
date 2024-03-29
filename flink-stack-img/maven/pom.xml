@@ -20,6 +20,12 @@
   <dependencies>
     
     <dependency>
+        <groupId>com.ververica</groupId>
+        <artifactId>flink-cdc-base</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
       <artifactId>flink-cdc-pipeline-connector-doris</artifactId>
       <groupId>com.ververica</groupId>
       <version>${flink.version}</version>
@@ -129,6 +135,38 @@
         <artifactId>flink-streaming-java</artifactId>
         <version>1.19.0</version>
         <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-s3-fs-hadoop</artifactId>
+        <version>1.19.0</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.iceberg</groupId>
+        <artifactId>iceberg-flink-runtime-1.17</artifactId>
+        <version>1.5.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.iceberg</groupId>
+        <artifactId>iceberg-aws</artifactId>
+        <version>1.5.0</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-aws</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-bundle</artifactId>
+        <version>1.12.688</version>
     </dependency>
 
   </dependencies>
