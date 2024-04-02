@@ -9,6 +9,7 @@ services:
       - -c
       - |
         bin/sql-client.sh
+        #sleep infinity
     environment:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -19,7 +20,8 @@ services:
         rest.address: jobmanager     
 
     volumes:
-      - ./flink-stack-img/maven:/maven
+      - ./data/:/data
+      - ./jars:/jars
       - ./host:/host
 
   jobmanager:
@@ -54,7 +56,7 @@ services:
         high-availability.cluster-id: /cluster_one
         high-availability.storageDir: file:///data/recovery      
     volumes:
-      - ./flink-stack-img/maven:/maven
+      - ./jars:/jars
       - ./host:/host
       - ./data/:/data
 
@@ -82,7 +84,7 @@ services:
         high-availability.cluster-id: /cluster_one
         high-availability.storageDir: file:///data/recovery      
     volumes:
-      - ./flink-stack-img/maven:/maven
+      - ./jars:/jars
       - ./host:/host
       - ./data/:/data
 
@@ -95,9 +97,9 @@ services:
       - "2181:2181"
       - "7001:7000"
     volumes:
-      - zookeeper_log:/logs
-      - zookeeper_data:/data
-      - zookeeper_datalog:/datalog
+      - zookeeper_log-volume:/logs
+      - zookeeper_data-volume:/data
+      - zookeeper_datalog-volume:/datalog
     ulimits:
       nofile:
         soft: 65536
@@ -137,16 +139,16 @@ services:
       tail -f /dev/null
       " 
 
-  catalog:
-    container_name: catalog
-    image: postgres
-    environment:
-      - POSTGRES_USER=dba
-      - POSTGRES_PASSWORD=rules
-    ports:
-      - 5435:5432
-    volumes: 
-      - catalog-data-volume:/var/lib/postgresql/data
+#  catalog:
+#    container_name: catalog
+#    image: postgres
+#    environment:
+#      - POSTGRES_USER=dba
+#      - POSTGRES_PASSWORD=rules
+#    ports:
+#      - 5435:5432
+#    volumes: 
+#      - catalog-data-volume:/var/lib/postgresql/data
 
 # Without a network explicitly defined, you hit this Hive/Thrift error
 # java.net.URISyntaxException Illegal character in hostname
@@ -156,8 +158,8 @@ networks:
      name: flink-stack
 
 volumes:
-  zookeeper_data:
-  zookeeper_datalog:
-  zookeeper_log:
-  catalog-data-volume:
+  zookeeper_log-volume:
+  zookeeper_data-volume:
+  zookeeper_datalog-volume:
+#  catalog-data-volume:
   minio-data-volume:

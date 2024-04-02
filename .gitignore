@@ -1,8 +1,9 @@
 .DS_Store
 host
 .env
-
-!host/jars/README.md
+target
+jars/*.jar
+*.jar 
 
 data
 
