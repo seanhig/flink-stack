@@ -1,3 +1,53 @@
+
+SET 'sql-client.verbose' = 'true';
+
+ADD JAR '/jars/flink-hudi-uber.jar';
+
+CREATE TABLE enriched_orders (
+   order_id INT,
+   order_date TIMESTAMP(3),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED ) WITH (
+   'connector' = 'mysql-cdc',
+   'hostname' = 'host.docker.internal',
+   'port' = '3306',
+   'username' = 'root',
+   'password' = 'Fender2000',
+   'database-name' = 'operations',
+   'table-name' = 'enriched_orders'
+ );
+
+CREATE TABLE enriched_orders_dl (
+   order_id INT,
+   order_date TIMESTAMP(3),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+  ) WITH (
+    'connector.type' = 'jdbc',
+    'connector.url' = 'jdbc:mysql://host.docker.internal:3306/operations',
+    'connector.username' = 'root',
+    'connector.password' = 'Fender2000',
+    'connector.table' = 'enriched_orders'
+  );
+
 CREATE TABLE enriched_orders_hudi_sink (
    order_id INT,
    order_date TIMESTAMP(3),
@@ -16,65 +66,72 @@ CREATE TABLE enriched_orders_hudi_sink (
  PARTITIONED BY (`order_id`)
  WITH (
     'connector' = 'hudi',
-    'path' = 's3a://ids-flink-demo-warehouse/orders/' ,
-    'table.type' = 'MERGE_ON_READ' 
+    'path' = 's3a://ids-flink-demo-warehouse/enriched_orders' ,
+    'table.type' = 'COPY_ON_WRITE',
+    'cdc.enabled' = 'true' ,
+    'read.streaming.enabled' = 'true',  -- this option enable the streaming read
+    'read.streaming.check-interval' = '4'     
  );
 
+SET 'execution.runtime-mode' = 'streaming';
 SET 'pipeline.name' = 'Hudi-enriched-orders';
 
 INSERT INTO enriched_orders_hudi_sink SELECT * FROM enriched_orders;
 
+INSERT INTO enriched_orders_hudi_sink SELECT * FROM enriched_orders_dl;
 
-drop table shipments_source;
-CREATE TABLE shipments_source (
-   shipment_id INT,
+SET 'execution.runtime-mode' = 'batch';
+
+---
+
+CREATE TABLE enriched_orders_hudi_sink (
    order_id INT,
+   order_date TIMESTAMP(3),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
    origin STRING,
    destination STRING,
    is_arrived BOOLEAN,
-   PRIMARY KEY (shipment_id) NOT ENFORCED
- ) WITH (
-   'connector' = 'postgres-cdc',
-   'hostname' = 'host.docker.internal',
-   'port' = '5432',
-   'username' = 'postgres',
-   'password' = 'Fender2000',
-   'database-name' = 'shipdb',
-   'schema-name' = 'public',
-   'slot.name' = 'shipments',
-   'decoding.plugin.name' = 'pgoutput',
-   'table-name' = 'shipments'
- );
-
-drop table shipments_hudi_sink;
-CREATE TABLE shipments_hudi_sink (
-   shipment_id INT,
-   order_id INT,
-   origin STRING,
-   destination STRING,
-   is_arrived BOOLEAN,
-   PRIMARY KEY (shipment_id) NOT ENFORCED
+   PRIMARY KEY (order_id) NOT ENFORCED
  )
- PARTITIONED BY (`destination`)
+ PARTITIONED BY (`order_id`)
  WITH (
     'connector' = 'hudi',
-    'path' = 's3a://ids-flink-demo-warehouse/shipments/' ,
-    'table.type' = 'MERGE_ON_READ' 
+    'path' = 'file:///data/orders/' ,
+    'table.type' = 'MERGE_ON_READ' ,
+    'cdc.enabled' = 'true' ,
+    'read.streaming.enabled' = 'true',  -- this option enable the streaming read
+    'read.streaming.check-interval' = '4'     
+
  );
 
-SET 'pipeline.name' = 'Hudi-shipments';
-
-
-INSERT INTO shipments_hudi_sink
-        (shipment_id, order_id, origin, destination, is_arrived)
-    SELECT
-        shipment_id,
-        order_id,
-        origin,
-        destination,
-        is_arrived
-    FROM shipments_source;
-
+CREATE TABLE enriched_orders_hudi_sink (
+   order_id INT,
+   order_date TIMESTAMP(3),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+ )
+ PARTITIONED BY (`order_id`)
+ WITH (
+    'connector' = 'hudi',
+    'path' = 'file:///data/orders/' ,
+    'table.type' = 'COPY_ON_WRITE',
+    'cdc.enabled' = 'true' 
+ );
 
 CREATE TABLE hudi_table(
     ts BIGINT,
@@ -103,3 +160,4 @@ VALUES
 (1695173887231,'3eeb61f7-c2b0-4636-99bd-5d7a5a1d2c04','rider-I','driver-S',41.06 ,'chennai'),
 (1695115999911,'c8abbe79-8d89-47ea-b4ce-4d224bae5bfa','rider-J','driver-T',17.85,'chennai');
 
+select * from hudi_table;

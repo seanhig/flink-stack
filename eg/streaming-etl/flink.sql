@@ -1,6 +1,11 @@
 -- Set options
 SET execution.checkpointing.interval = 3s;
 SET sql-client.execution.result-mode = 'tableau' ;
+SET 'sql-client.verbose' = 'true';
+
+ADD JAR '/jars/flink-stack-core.jar';
+ADD JAR '/jars/flink-stack-postgres.jar';
+ADD JAR '/jars/flink-stack-jdbc.jar';
 
 -- Flink SQL to define products and orders from erpdb
 CREATE TABLE products (
@@ -80,6 +85,8 @@ CREATE TABLE enriched_orders (
     'connector.password' = 'Fender2000',
     'connector.table' = 'enriched_orders'
   );
+
+select * from enriched_orders;
 
 -- Sets the job name for the any SQL that follows
 SET 'pipeline.name' = 'MySQL-enriched_orders';

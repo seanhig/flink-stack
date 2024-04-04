@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
  
   <groupId>com.flink.app</groupId>
-  <artifactId>flink-hudi-uber</artifactId>
-  <name>flink-hudi-uber</name>
+  <artifactId>flink-stack-hudi</artifactId>
+  <name>flink-stack-hudi</name>
   <version>1.0</version>
  
   <properties>
@@ -17,19 +17,24 @@
  
   <dependencies>
     
-<!--
+    <!--
     <dependency>
         <groupId>org.apache.flink</groupId>
         <artifactId>flink-s3-fs-hadoop</artifactId>
         <version>${flink.version}</version>
-        <scope>provided</scope>
     </dependency>
+
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-aws</artifactId>
         <version>3.4.0</version>
     </dependency>
--->
+
+    <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-bundle</artifactId>
+        <version>1.12.692</version>
+    </dependency>
 
     <dependency>
         <groupId>org.apache.flink</groupId>
@@ -38,6 +43,69 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>1.11.3</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hudi</groupId>
+        <artifactId>hudi-common</artifactId>
+        <version>1.0.0-beta1</version>
+    </dependency>
+
+   <dependency>
+        <groupId>org.apache.hudi</groupId>
+        <artifactId>hudi-utilities-bundle_2.12</artifactId>
+        <version>1.0.0-beta1</version>
+    </dependency>
+
+    -->
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-metrics-dropwizard</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.parquet</groupId>
+        <artifactId>parquet-avro</artifactId>
+        <version>1.13.1</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.parquet</groupId>
+        <artifactId>parquet-column</artifactId>
+        <version>1.13.1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.parquet</groupId>
+      <artifactId>parquet-hadoop</artifactId>
+      <version>1.13.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.parquet</groupId>
+      <artifactId>parquet-common</artifactId>
+      <version>1.13.1</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hudi</groupId>
+        <artifactId>hudi-flink</artifactId>
+        <version>1.0.0-beta1</version>
+    </dependency>
+ 
+    <dependency>
+        <groupId>org.apache.hudi</groupId>
+        <artifactId>hudi-flink1.18-bundle</artifactId>
+        <version>1.0.0-beta1</version>
+    </dependency>
+
+<!--
+    <dependency>
         <groupId>org.apache.hudi</groupId>
         <artifactId>hudi-flink</artifactId>
         <version>1.0.0-beta1</version>
@@ -45,9 +113,24 @@
 
     <dependency>
         <groupId>org.apache.hudi</groupId>
-        <artifactId>hudi-flink1.18-bundle</artifactId>
+        <artifactId>hudi-aws</artifactId>
         <version>1.0.0-beta1</version>
     </dependency>
+
+    <dependency>
+        <groupId>org.apache.parquet</groupId>
+        <artifactId>parquet-avro</artifactId>
+        <version>1.13.1</version>
+    </dependency>
+
+
+    <dependency>
+        <groupId>org.apache.parquet</groupId>
+        <artifactId>parquet-column</artifactId>
+        <version>1.13.1</version>
+    </dependency>
+
+-->
 
   </dependencies>
  

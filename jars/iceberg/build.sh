@@ -1,3 +1,3 @@
 mvn clean package
-cp target/fink-hudi-uber-1.0-jar-with-dependencies.jar ../fink-hudi-uber.jar
+cp target/flink-stack-iceberg-1.0-jar-with-dependencies.jar ../flink-stack-iceberg.jar
 rm -rf target

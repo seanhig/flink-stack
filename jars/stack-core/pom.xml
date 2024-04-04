@@ -7,14 +7,12 @@
   <version>1.0</version>
  
   <name>flink-stack-core</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <flinkjdbc.version>3.0.1</flinkjdbc.version>
+    <flinkjdbc.version>3.0.0</flinkjdbc.version>
     <flink.version>1.19.0</flink.version>
   </properties>
  
@@ -26,7 +24,6 @@
         <version>${flinkjdbc.version}</version>
     </dependency>
 
-<!--
     <dependency>
       <artifactId>flink-cdc-pipeline-connector-mysql</artifactId>
       <groupId>com.ververica</groupId>
@@ -40,23 +37,10 @@
     </dependency>
 
     <dependency>
-      <artifactId>flink-sql-connector-oracle-cdc</artifactId>
-      <groupId>com.ververica</groupId>
-      <version>${flinkjdbc.version}</version>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <version>8.3.0</version>
     </dependency>
-
-    <dependency>
-      <artifactId>flink-sql-connector-postgres-cdc</artifactId>
-      <groupId>com.ververica</groupId>
-      <version>${flinkjdbc.version}</version>
-    </dependency>
-
-    <dependency>
-      <artifactId>flink-sql-connector-sqlserver-cdc</artifactId>
-      <groupId>com.ververica</groupId>
-      <version>${flinkjdbc.version}</version>
-    </dependency>
--->
 
     <dependency>
         <artifactId>flink-connector-jdbc</artifactId>
@@ -70,31 +54,6 @@
         <version>1.14.6</version>
     </dependency>
 
-    <dependency>
-      <artifactId>ojdbc10</artifactId>
-      <groupId>com.oracle.database.jdbc</groupId>
-      <version>19.22.0.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.microsoft.sqlserver</groupId>
-      <artifactId>mssql-jdbc</artifactId>
-      <version>12.6.1.jre11</version>
-    </dependency>
-
-    <dependency>
-        <groupId>com.mysql</groupId>
-        <artifactId>mysql-connector-j</artifactId>
-        <version>8.3.0</version>
-    </dependency>
-
-    <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>42.7.3</version>
-    </dependency>
-
-<!--
     <dependency>
         <groupId>org.apache.flink</groupId>
         <artifactId>flink-parquet</artifactId>
@@ -125,6 +84,14 @@
         <version>${flink.version}</version>
     </dependency>
 
+    <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-bundle</artifactId>
+        <version>1.12.692</version>
+    </dependency>
+
+
+<!--
    <dependency>
         <groupId>org.apache.flink</groupId>
         <artifactId>flink-s3-fs-hadoop</artifactId>
@@ -135,12 +102,6 @@
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-aws</artifactId>
         <version>3.4.0</version>
-    </dependency>
-
-    <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-bundle</artifactId>
-        <version>1.12.692</version>
     </dependency>
 
     <dependency>
@@ -172,6 +133,7 @@
       <artifactId>avro</artifactId>
       <version>1.11.3</version>
     </dependency>
+
 -->
 
   </dependencies>
@@ -179,5 +141,30 @@
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
     </pluginManagement>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.1.1</version>
+
+            <configuration>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+
+            <executions>
+                <execution>
+                    <id>make-assembly</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
+
+        </plugin>
+    </plugins>    
+
   </build>
 </project>
