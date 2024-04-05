@@ -26,38 +26,6 @@
         <version>${flinkjdbc.version}</version>
     </dependency>
 
-<!--
-    <dependency>
-      <artifactId>flink-cdc-pipeline-connector-mysql</artifactId>
-      <groupId>com.ververica</groupId>
-      <version>${flinkjdbc.version}</version>
-    </dependency>
-
-    <dependency>
-      <artifactId>flink-sql-connector-mysql-cdc</artifactId>
-      <groupId>com.ververica</groupId>
-      <version>${flinkjdbc.version}</version>
-    </dependency>
-
-    <dependency>
-      <artifactId>flink-sql-connector-oracle-cdc</artifactId>
-      <groupId>com.ververica</groupId>
-      <version>${flinkjdbc.version}</version>
-    </dependency>
-
-    <dependency>
-      <artifactId>flink-sql-connector-postgres-cdc</artifactId>
-      <groupId>com.ververica</groupId>
-      <version>${flinkjdbc.version}</version>
-    </dependency>
-
-    <dependency>
-      <artifactId>flink-sql-connector-sqlserver-cdc</artifactId>
-      <groupId>com.ververica</groupId>
-      <version>${flinkjdbc.version}</version>
-    </dependency>
--->
-
     <dependency>
         <artifactId>flink-connector-jdbc</artifactId>
         <groupId>org.apache.flink</groupId>
@@ -93,6 +61,94 @@
         <artifactId>postgresql</artifactId>
         <version>42.7.3</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.iceberg</groupId>
+      <artifactId>iceberg-core</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+
+<!-- required for Iceberg to work -->
+
+    <dependency>
+      <groupId>org.apache.iceberg</groupId>
+      <artifactId>iceberg-flink-runtime-1.18</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+
+   <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-s3-fs-hadoop</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-aws</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-json</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-avro</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+	    <groupId>org.apache.flink</groupId>
+	    <artifactId>flink-parquet</artifactId>
+	    <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-parquet</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.parquet</groupId>
+        <artifactId>parquet-avro</artifactId>
+        <version>1.12.2</version>
+        <exclusions>
+        <!--
+            <exclusion>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-client</artifactId>
+            </exclusion>
+        -->
+            <exclusion>
+                <groupId>it.unimi.dsi</groupId>
+                <artifactId>fastutil</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+
+<!-- required for Iceberg to work 
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-client</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs-client</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+-->
 
 <!--
     <dependency>

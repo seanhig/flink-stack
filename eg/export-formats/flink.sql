@@ -4,8 +4,6 @@ SET 'sql-client.verbose' = 'true';
 
 -- AVRO
 
-ADD JAR '/jar-packs/flink-stack-avro.jar';
-
 CREATE TABLE enriched_orders_avro (
    order_id INT,
    order_date TIMESTAMP(3),
@@ -36,8 +34,6 @@ INSERT INTO enriched_orders_avro SELECT * FROM enriched_orders;
 
 -- Parquet
 
-ADD JAR '/jar-packs/flink-stack-parquet.jar';
-
 CREATE TABLE enriched_orders_parquet (
    order_id INT,
    order_date TIMESTAMP(3),
@@ -66,9 +62,8 @@ INSERT INTO enriched_orders_parquet SELECT * FROM enriched_orders;
 -- DROP TABLE enriched_orders_parquet;
 
 
--- Parquet
+-- JSON
 
-ADD JAR '/jar-packs/flink-stack-json.jar';
 CREATE TABLE enriched_orders_json (
    order_id INT,
    order_date TIMESTAMP(3),
