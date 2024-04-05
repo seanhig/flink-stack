@@ -1,7 +1,7 @@
 
 SET 'sql-client.verbose' = 'true';
 
-ADD JAR '/jars/flink-hudi-uber.jar';
+ADD JAR '/jar-packs/flink-hudi-uber.jar';
 
 CREATE TABLE enriched_orders (
    order_id INT,

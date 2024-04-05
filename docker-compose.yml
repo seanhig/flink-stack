@@ -23,8 +23,8 @@ services:
 
     volumes:
       - ./data/:/data
-      - ./jars:/jars
-      - ./host:/host
+      - ./jar-packs:/jar-packs
+      - ./:/host
 
   jobmanager:
     container_name: 'jobmanager'
@@ -59,8 +59,8 @@ services:
         high-availability.storageDir: file:///data/recovery     
         classloader.check-leaked-classloader: false     
     volumes:
-      - ./jars:/jars
-      - ./host:/host
+      - ./jar-packs:/jar-packs
+      - ./:/host
       - ./data/:/data
 
   taskmanager:
@@ -88,8 +88,8 @@ services:
         high-availability.storageDir: file:///data/recovery      
         classloader.check-leaked-classloader: false     
     volumes:
-      - ./jars:/jars
-      - ./host:/host
+      - ./jar-packs:/jar-packs
+      - ./:/host
       - ./data/:/data
 
   zk:

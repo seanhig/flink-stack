@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
  
   <groupId>com.flink.app</groupId>
-  <artifactId>flink-aws-uber</artifactId>
+  <artifactId>flink-stack-json</artifactId>
   <version>1.0</version>
  
-  <name>flink-aws-uber</name>
+  <name>flink-stack-json</name>
  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,35 +17,11 @@
   </properties>
  
   <dependencies>
-    
-    <dependency>
-        <groupId>org.apache.flink</groupId>
-        <artifactId>flink-connector-kafka</artifactId>
-        <version>3.1.0-1.18</version>
-    </dependency>
 
     <dependency>
         <groupId>org.apache.flink</groupId>
-        <artifactId>flink-connector-dynamodb</artifactId>
-        <version>4.2.0-1.18</version>
-    </dependency>
-
-    <dependency>
-        <groupId>org.apache.flink</groupId>
-        <artifactId>flink-sql-connector-aws-kinesis-firehose</artifactId>
-        <version>4.2.0-1.18</version>
-    </dependency>
-
-    <dependency>
-        <groupId>org.apache.flink</groupId>
-        <artifactId>flink-connector-kinesis</artifactId>
-        <version>4.2.0-1.18</version>
-    </dependency>
-
-    <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-bundle</artifactId>
-        <version>1.12.688</version>
+        <artifactId>flink-json</artifactId>
+        <version>${flink.version}</version>
     </dependency>
 
   </dependencies>
@@ -53,7 +29,6 @@
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
     </pluginManagement>
-
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -78,5 +53,6 @@
 
         </plugin>
     </plugins>    
+
   </build>
 </project>

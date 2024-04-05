@@ -1,1 +1,1 @@
-docker compose run sql-client
+docker exec -it sql-client bin/sql-client.sh 

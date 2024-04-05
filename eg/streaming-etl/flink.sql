@@ -3,9 +3,9 @@ SET execution.checkpointing.interval = 3s;
 SET sql-client.execution.result-mode = 'tableau' ;
 SET 'sql-client.verbose' = 'true';
 
-ADD JAR '/jars/flink-stack-core.jar';
-ADD JAR '/jars/flink-stack-postgres.jar';
-ADD JAR '/jars/flink-stack-jdbc.jar';
+ADD JAR '/jar-packs/flink-stack-mysql.jar';
+ADD JAR '/jar-packs/flink-stack-postgres.jar';
+ADD JAR '/jar-packs/flink-stack-jdbc.jar';
 
 -- Flink SQL to define products and orders from erpdb
 CREATE TABLE products (
@@ -99,7 +99,6 @@ INSERT INTO enriched_orders
  LEFT JOIN shipments AS s ON o.order_id = s.order_id;
 
 
--- Flink SQL to define the target enriched_orders_dl table in apache parquet format
 
 
 

@@ -2,7 +2,7 @@ SET execution.checkpointing.interval = 3s;
 
 SET 'sql-client.verbose' = 'true';
 
-ADD JAR '/jars/flink-iceberg-uber.jar';
+ADD JAR '/jar-packs/flink-iceberg-uber.jar';
 
 CREATE TABLE enriched_orders (
    order_id INT,
