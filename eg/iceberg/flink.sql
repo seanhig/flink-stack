@@ -76,8 +76,9 @@ CREATE TABLE iceberg_enriched_orders_sink_aws (
    PRIMARY KEY (order_id) NOT ENFORCED ) 
    WITH (
     'connector'='iceberg',
-    'catalog-name'='iceberg_catalog',
-    'catalog-type'='hadoop',  
+    'catalog-name'='AwsDataCatalog',
+    'catalog-database'='flink-orders',
+    'catalog-type'='glue',  
     'warehouse'='s3a://ids-flink-demo-warehouse/iceberg_enriched_orders',
     'format-version'='2',
     'write.upsert.enabled'='true'

@@ -2,12 +2,16 @@ version: "3.8"
 services:
 
   sql-client:
-    build: ./flink-stack-img
+    build: ./docker-images/flink
     container_name: 'sql-client'
     command: 
       - /bin/sh
       - -c
       - |
+        cp /host/conf/flink/sql-config.yaml /opt/flink/conf/config.yaml
+        cp /host/conf/flink/hive-site.xml /opt/flink/conf
+        sed -i 's/AWS_ACCESS_KEY_ID/'$AWS_ACCESS_KEY_ID'/g' /opt/flink/conf/hive-site.xml
+        sed -i 's/AWS_SECRET_ACCESS_KEY/'$AWS_SECRET_ACCESS_KEY'/g' /opt/flink/conf/hive-site.xml
         #bin/sql-client.sh
         echo "Starting the SQL Client instance."
         sleep infinity
@@ -15,12 +19,6 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        rest.address: jobmanager
-        classloader.check-leaked-classloader: false     
-
     volumes:
       - ./data/:/data
       - ./jar-packs:/jar-packs
@@ -28,7 +26,7 @@ services:
 
   jobmanager:
     container_name: 'jobmanager'
-    build: ./flink-stack-img
+    build: ./docker-images/flink
     ports:
       - "8081:8081"
       - "6123:6123"
@@ -36,6 +34,11 @@ services:
       - /bin/sh
       - -c
       - |
+        cp /host/conf/flink/job-config.yaml /opt/flink/conf/config.yaml
+        cp /host/conf/flink/hive-site.xml /opt/flink/conf
+        sed -i 's/AWS_ACCESS_KEY_ID/'$AWS_ACCESS_KEY_ID'/g' /opt/flink/conf/hive-site.xml
+        sed -i 's/AWS_SECRET_ACCESS_KEY/'$AWS_SECRET_ACCESS_KEY'/g' /opt/flink/conf/hive-site.xml
+        mkdir -p /data/catalog_store
         mkdir -p /data/rocksdb/checkpoint
         mkdir -p /data/rocksdb/data
         mkdir -p /data/recovery
@@ -44,49 +47,29 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        state.backend: rocksdb
-        state.backend.rocksdb.timer-service.factory: ROCKSDB
-        state.checkpoints.dir: file:///data/rocksdb/checkpoint
-        state.backend.rocksdb.localdir: file:///data/rocksdb/data
-        state.backend.incremental: true
-        high-availability.type: zookeeper
-        high-availability.zookeeper.quorum: zk:2181
-        high-availability.zookeeper.path.root: /flink
-        high-availability.cluster-id: /cluster_one
-        high-availability.storageDir: file:///data/recovery     
-        classloader.check-leaked-classloader: false     
     volumes:
       - ./jar-packs:/jar-packs
       - ./:/host
       - ./data/:/data
 
   taskmanager:
-    build: ./flink-stack-img
+    build: ./docker-images/flink
     depends_on:
       - jobmanager
     command: 
       - /bin/sh
       - -c
       - |
+        cp /host/conf/flink/task-config.yaml /opt/flink/conf/config.yaml
+        cp /host/conf/flink/hive-site.xml /opt/flink/conf
+        sed -i 's/AWS_ACCESS_KEY_ID/'$AWS_ACCESS_KEY_ID'/g' /opt/flink/conf/hive-site.xml
+        sed -i 's/AWS_SECRET_ACCESS_KEY/'$AWS_SECRET_ACCESS_KEY'/g' /opt/flink/conf/hive-site.xml
         /docker-entrypoint.sh taskmanager
     scale: 1
     environment:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 100
-        high-availability.type: zookeeper
-        high-availability.zookeeper.quorum: zk:2181
-        high-availability.zookeeper.path.root: /flink
-        high-availability.cluster-id: /cluster_one
-        high-availability.storageDir: file:///data/recovery      
-        classloader.check-leaked-classloader: false     
     volumes:
       - ./jar-packs:/jar-packs
       - ./:/host
@@ -143,16 +126,25 @@ services:
       tail -f /dev/null
       " 
 
-#  catalog:
-#    container_name: catalog
-#    image: postgres
-#    environment:
-#      - POSTGRES_USER=dba
-#      - POSTGRES_PASSWORD=rules
-#    ports:
-#      - 5435:5432
-#    volumes: 
-#      - catalog-data-volume:/var/lib/postgresql/data
+  hive-metastore:
+    container_name: hms
+    build: ./docker-images/hive
+    ports:
+      - "9083:9083"
+    environment:
+      - HMS_LOGLEVEL=INFO
+      - SERVICE_NAME=metastore
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    entrypoint: >
+      /bin/sh -c "echo 'Copying metastore configuration...' && cp /host/conf/hive/metastore-site.xml /opt/hive/conf/; 
+      sed -i 's/AWS_ACCESS_KEY_ID/'$AWS_ACCESS_KEY_ID'/g' /host/conf/hive/metastore-site.xml; 
+      sed -i 's/AWS_SECRET_ACCESS_KEY/'$AWS_SECRET_ACCESS_KEY'/g' /host/conf/hive/metastore-site.xml; 
+      /entrypoint.sh"
+    volumes:
+      - ./:/host
+      - ./data/:/data
 
 # Without a network explicitly defined, you hit this Hive/Thrift error
 # java.net.URISyntaxException Illegal character in hostname
@@ -165,5 +157,4 @@ volumes:
   zookeeper_log-volume:
   zookeeper_data-volume:
   zookeeper_datalog-volume:
-#  catalog-data-volume:
   minio-data-volume:

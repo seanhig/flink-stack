@@ -1,0 +1,41 @@
+execution.current-catalog: hive_catalog  # set the HiveCatalog as the current catalog of the session
+    
+catalogs.name: hive_catalog
+catalogs.type: hive
+catalogs.hive-conf-dir: /opt/flink/conf
+
+classloader.check-leaked-classloader: false     
+
+table.catalog-store.kind: file
+table.catalog-store.file.path: file:///data/catalog_store
+
+jobmanager.rpc.address: jobmanager
+rest.address: jobmanager
+
+jobmanager.heap.size: 4096m
+jobmanager.memory.heap.size: 4096m
+taskmanager.heap.size: 4096m
+
+# The number of task slots that each TaskManager offers. Each slot runs one parallel pipeline.
+
+taskmanager.numberOfTaskSlots: 100
+
+# The parallelism used for programs that did not specify and other parallelism.
+
+parallelism.default: 1
+
+# Heartbeats every 200ms, timeout after 2s.
+akka.ask.timeout: 1s
+heartbeat.interval: 200
+heartbeat.timeout: 2000
+
+state.backend: rocksdb
+state.backend.rocksdb.timer-service.factory: ROCKSDB
+state.checkpoints.dir: file:///data/rocksdb/checkpoint
+state.backend.rocksdb.localdir: file:///data/rocksdb/data
+state.backend.incremental: true
+high-availability.type: zookeeper
+high-availability.zookeeper.quorum: zk:2181
+high-availability.zookeeper.path.root: /flink
+high-availability.cluster-id: /cluster_one
+high-availability.storageDir: file:///data/recovery    

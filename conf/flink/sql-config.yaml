@@ -1,0 +1,14 @@
+execution.current-catalog: hive_catalog  # set the HiveCatalog as the current catalog of the session
+    
+catalogs.name: hive_catalog
+catalogs.type: hive
+catalogs.hive-conf-dir: /opt/flink/conf
+
+classloader.check-leaked-classloader: false     
+
+table.catalog-store.kind: file
+table.catalog-store.file.path: file:///data/catalog_store
+
+jobmanager.rpc.address: jobmanager
+rest.address: jobmanager
+

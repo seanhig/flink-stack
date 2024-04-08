@@ -1,3 +1,3 @@
 # Flink and Apache Iceberg
 
-> TODO: still can't get AWS Athena and the OOTB Iceberg format to work together
+https://iceberg.apache.org/docs/1.5.0/aws/#flink

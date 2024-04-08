@@ -1,0 +1,11 @@
+classloader.check-leaked-classloader: false     
+jobmanager.rpc.address: jobmanager
+rest.address: jobmanager
+
+taskmanager.heap.size: 4096m
+
+high-availability.type: zookeeper
+high-availability.zookeeper.quorum: zk:2181
+high-availability.zookeeper.path.root: /flink
+high-availability.cluster-id: /cluster_one
+high-availability.storageDir: file:///data/recovery    
