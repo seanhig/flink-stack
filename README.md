@@ -33,6 +33,10 @@ The `Flink Stack` includes:
 - Bash
 - The [database-stack](https://github.com/seanhig/database-stack) is recommended.
 
+## Setup
+
+Make sure to copy the `.env-sample` file to a `.env` file and add the correct AWS credentials.
+
 ## Usage
 
 ```
@@ -50,13 +54,12 @@ And then once the stack is up and running you can shell into the `Flink-SQL clie
  
 > Scaling the `taskmanager` can be done with `docker-compose scale taskmanager=3`.  Each taskmanager is configured to support 100 job slots.
 
-See the [Streaming ETL](eg/streaming-etl/) example to get started with the `flink-stack`.
+See the [Streaming ETL to Iceberg](eg/streaming-etl-to-iceberg/) example to see what the `flink-stack` can do.
 
-Happy flinking.
+Happy flinking!
 
 ## Additional Components
 The stack also includes `Minio` to simulate `AWS S3` locally.  View the Minio web interface at `http://localhost:9000`.
-
 
 ## Jar Usage and Build Notes
 
@@ -76,4 +79,4 @@ ADD JAR '/jar-packs/flink-stack-mysql.jar';
 
 At the present it seems `HADOOP_CLASSPATH` needs to exist, at least in some form, and the easiest way to accomplish this is to bundle the latest hadoop version into the Flink image.  Bundling Hadoop jars without shading them as embedded (in a Java code usage model) simply does not work.
 
-See the `eg` folder for examples, most are based on the `streaming-etl` foundation.
+See the `eg` folder for examples, most are based on the `streaming-etl-to-iceberg` foundation.

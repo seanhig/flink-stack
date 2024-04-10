@@ -1,4 +1,5 @@
-# Streaming ETL - MySQL and PostgrSQL Sources -> MySQL Target
+# Streaming ETL to Iceberg
+## MySQL and PostgrSQL Sources -> MySQL Target Summary Table -> AWS S3 Iceberg Data Lake
 This example uses CDC to capture changes on source MySQL and PostgreSQL tables, and joins them to create a new target table in another MySQL database.  Changes are replicated in real-time to the target table.  The job is defined using only `Flink-SQL` (no custom Java code).
 
 ## Requirements
@@ -8,7 +9,7 @@ This example uses CDC to capture changes on source MySQL and PostgreSQL tables, 
 - Azure Data Studio or any other client that can connect to MySQL and PostgreSQL.
 - Bash 
 
-## MySQL
+## MySQL Setup
 
 MySQL hosts the `erpdb` database which contains the `products` and `orders` source tables.
 
@@ -76,7 +77,7 @@ CREATE TABLE enriched_orders (
 
 ```
 
-## PostreSQL
+## PostreSQL Setup
 
 PostgreSQL hosts the `shipdb` database which contains the `shipments` table.
 
@@ -100,7 +101,7 @@ VALUES (default,10001,'Beijing','Shanghai',false),
        (default,10003,'Shanghai','Hangzhou',false);
 ```
 
-## Flink-SQL
+## Flink-SQL for MySQL, Postgres CDC to MySQL Summary Table (enriched_orders)
 
 Start the `Flink-SQL` client:
 
@@ -255,7 +256,77 @@ Note the `+I` for insert, and the pre `-U` and post `+U` update values for the `
 
 The changes are also `sinked` to the target `enriched_orders` table in real-time. And the above query will also show up as a `Running Job` for as long as it is active. 
 
-This enables `Jobs` to listen in on active `streaming tables` when they are interested in being notified of changes, without need for a streaming service like `Kafka` or `Kinesis`, if there is no need to perist the record of change events.
+## Flink-SQL for CDC from MySQL Summary Table to AWS S3 Iceberg Data Lake
 
-`Kafka` or `Kinesis` can be inserted into the workflow to introduce a log of change over time, and another way for clients to listen for change events as they are occurring.  With underlying stream technology those changes can also be replayed or rewound.
+See the [flink-iceberg](flink-iceberg.sql) file.
 
+```
+SET execution.checkpointing.interval = 3s;
+
+SET 'sql-client.verbose' = 'true';
+
+ADD JAR '/jar-packs/flink-stack-mysql.jar';
+
+-- Iceberg CDC Source table
+
+CREATE TABLE enriched_orders_cdc (
+   order_id INT,
+   order_date TIMESTAMP(3),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED ) 
+   WITH (
+   'connector' = 'mysql-cdc',
+   'hostname' = 'host.docker.internal',
+   'port' = '3306',
+   'username' = 'root',
+   'password' = 'Fender2000',
+   'database-name' = 'operations',
+   'table-name' = 'enriched_orders'
+ );
+
+-- Catalog aligns with default Aws Catalog in account
+CREATE CATALOG iceberg_catalog WITH (
+  'type'='iceberg',
+  'warehouse'='s3a://ids-flink-demo-warehouse',
+  'catalog-impl'='org.apache.iceberg.aws.glue.GlueCatalog',
+  'io-impl'='org.apache.iceberg.aws.s3.S3FileIO'
+);
+
+CREATE DATABASE iceberg_orders;
+
+-- Verify in AWS Console that the database exists in the Glue Catalog
+
+USE iceberg_orders;
+
+CREATE TABLE enriched_orders_lake (
+   order_id INT,
+   order_date TIMESTAMP,
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED ) ;
+   
+SET 'pipeline.name' = 'Iceberg-enriched-orders-aws';
+
+-- This will create the streaming CDC to Iceberg job
+INSERT INTO iceberg_catalog.iceberg_orders.enriched_orders_lake SELECT * FROM default_catalog.default_database.enriched_orders_cdc;
+
+```
+
+Once the job has been submitted the data can be viewed using `AWS Athena` and queried like any other table in the `Glue Catalog`.  Updates will occur in real-time and can be verified through the query interface and consuming clients, such as `Apache Superset`.

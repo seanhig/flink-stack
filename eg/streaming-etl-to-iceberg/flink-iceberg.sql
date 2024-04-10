@@ -4,7 +4,7 @@ SET 'sql-client.verbose' = 'true';
 
 ADD JAR '/jar-packs/flink-stack-mysql.jar';
 
--- Iceberg CDC
+-- Iceberg CDC Source table
 
 CREATE TABLE enriched_orders_cdc (
    order_id INT,
@@ -30,8 +30,6 @@ CREATE TABLE enriched_orders_cdc (
    'table-name' = 'enriched_orders'
  );
 
--- AWS
-
 -- Catalog aligns with default Aws Catalog in account
 CREATE CATALOG iceberg_catalog WITH (
   'type'='iceberg',
@@ -41,6 +39,8 @@ CREATE CATALOG iceberg_catalog WITH (
 );
 
 CREATE DATABASE iceberg_orders;
+
+-- Verify in AWS Console that the database exists in the Glue Catalog
 
 USE iceberg_orders;
 
@@ -61,6 +61,7 @@ CREATE TABLE enriched_orders_lake (
    
 SET 'pipeline.name' = 'Iceberg-enriched-orders-aws';
 
+-- This will create the streaming CDC to Iceberg job
 INSERT INTO iceberg_catalog.iceberg_orders.enriched_orders_lake SELECT * FROM default_catalog.default_database.enriched_orders_cdc;
 
 
