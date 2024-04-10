@@ -5,7 +5,13 @@ SET 'sql-client.verbose' = 'true';
 
 ADD JAR '/jar-packs/flink-stack-mysql.jar';
 ADD JAR '/jar-packs/flink-stack-postgres.jar';
-ADD JAR '/jar-packs/flink-stack-jdbc.jar';
+
+CREATE CATALOG hive_catalog WITH (
+    'type' = 'hive',
+    'hive-conf-dir' = '/opt/flink/conf'
+);
+-- set the HiveCatalog as the current catalog of the session
+USE CATALOG hive_catalog;
 
 -- Flink SQL to define products and orders from erpdb
 CREATE TABLE products (

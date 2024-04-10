@@ -2,6 +2,16 @@
 
 A `docker-compose` stack for Flink and Flink-SQL development.
 
+The primary focus of this Flink Stack is to enable CDC to S3 Iceberg in real time, enabling Athena and the Data Lake to act as a severless analytical datastore.
+
+The stack includes:
+
+- Minio for local S3 object storage
+- Hive Metastore as a persistent Data Catalog
+- Zookeeper for HA and job state 
+
+> It has been quite a ride getting Flink to standup with all of the other Apache dependencies.  Hopefully this stack spares others the suffering.
+
 ## Requirements
 
 - Docker 

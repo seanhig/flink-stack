@@ -3,6 +3,7 @@ jobmanager.rpc.address: jobmanager
 rest.address: jobmanager
 
 taskmanager.heap.size: 4096m
+taskmanager.numberOfTaskSlots: 100
 
 high-availability.type: zookeeper
 high-availability.zookeeper.quorum: zk:2181

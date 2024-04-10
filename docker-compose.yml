@@ -139,8 +139,8 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     entrypoint: >
       /bin/sh -c "echo 'Copying metastore configuration...' && cp /host/conf/hive/metastore-site.xml /opt/hive/conf/; 
-      sed -i 's/AWS_ACCESS_KEY_ID/'$AWS_ACCESS_KEY_ID'/g' /host/conf/hive/metastore-site.xml; 
-      sed -i 's/AWS_SECRET_ACCESS_KEY/'$AWS_SECRET_ACCESS_KEY'/g' /host/conf/hive/metastore-site.xml; 
+      sed -i 's/AWS_ACCESS_KEY_ID/'$AWS_ACCESS_KEY_ID'/g' /opt/hive/conf/metastore-site.xml; 
+      sed -i 's/AWS_SECRET_ACCESS_KEY/'$AWS_SECRET_ACCESS_KEY'/g' /opt/hive/conf/metastore-site.xml; 
       /entrypoint.sh"
     volumes:
       - ./:/host

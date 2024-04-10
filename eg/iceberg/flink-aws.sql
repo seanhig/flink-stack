@@ -1,0 +1,66 @@
+SET execution.checkpointing.interval = 3s;
+
+SET 'sql-client.verbose' = 'true';
+
+ADD JAR '/jar-packs/flink-stack-mysql.jar';
+
+-- Iceberg CDC
+
+CREATE TABLE enriched_orders_cdc (
+   order_id INT,
+   order_date TIMESTAMP(3),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED ) 
+   WITH (
+   'connector' = 'mysql-cdc',
+   'hostname' = 'host.docker.internal',
+   'port' = '3306',
+   'username' = 'root',
+   'password' = 'Fender2000',
+   'database-name' = 'operations',
+   'table-name' = 'enriched_orders'
+ );
+
+-- AWS
+
+-- Catalog aligns with default Aws Catalog in account
+CREATE CATALOG iceberg_catalog WITH (
+  'type'='iceberg',
+  'warehouse'='s3a://ids-flink-demo-warehouse',
+  'catalog-impl'='org.apache.iceberg.aws.glue.GlueCatalog',
+  'io-impl'='org.apache.iceberg.aws.s3.S3FileIO'
+);
+
+CREATE DATABASE iceberg_orders;
+
+USE iceberg_orders;
+
+CREATE TABLE enriched_orders_lake (
+   order_id INT,
+   order_date TIMESTAMP,
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED ) ;
+   
+SET 'pipeline.name' = 'Iceberg-enriched-orders-aws';
+
+INSERT INTO iceberg_catalog.iceberg_orders.enriched_orders_lake SELECT * FROM default_catalog.default_database.enriched_orders_cdc;
+
+

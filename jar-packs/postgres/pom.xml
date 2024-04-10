@@ -13,7 +13,6 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <flinkjdbc.version>3.0.0</flinkjdbc.version>
-    <flink.version>1.19.0</flink.version>
   </properties>
  
   <dependencies>
@@ -23,7 +22,6 @@
         <artifactId>flink-cdc-base</artifactId>
         <version>${flinkjdbc.version}</version>
     </dependency>
-
 
     <dependency>
       <artifactId>flink-sql-connector-postgres-cdc</artifactId>

@@ -44,18 +44,20 @@ likely need to add a number of new values. -->
 
     <property>
         <name>fs.s3a.access.key</name>
-        <value>admin</value>
+        <value>AWS_ACCESS_KEY_ID</value>
     </property>
 
     <property>
         <name>fs.s3a.secret.key</name>
-        <value>password</value>
+        <value>AWS_SECRET_ACCESS_KEY</value>
     </property>
 
+<!--
     <property>
         <name>fs.s3a.endpoint</name>
         <value>http://minio:9000</value>
     </property>
+-->
 
     <property>
         <name>fs.s3a.path.style.access</name>
