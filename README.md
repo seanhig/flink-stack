@@ -58,8 +58,16 @@ See the [Streaming ETL to Iceberg](eg/streaming-etl-to-iceberg/) example to see 
 
 Happy flinking!
 
-## Additional Components
-The stack also includes `Minio` to simulate `AWS S3` locally.  View the Minio web interface at `http://localhost:9000`.
+## Flink Catalogs
+
+The folks at decodable put out a lot of good info that has helped with navigating the Apache docs, or lack therof.  This is a great primer [article](https://www.decodable.co/blog/catalogs-in-flink-sql-a-primer) on `Flink Catalogs`.
+
+Essentially a catalog will persist your table definitions and source file locations (metadata) between sessions.  The `Flink SQL Client` by default will use an in-memory catalog that will disappear with each session.
+
+`Flink Stack` supports two catalogs:
+
+1. `Hive Metastore` for local definitons to source systems as it is supported out of the box with Flink.
+2. `Glue` via Iceberg for the `Glue Data Catalog` integration.  Generally this catalog is only used for target Iceberg tables.
 
 ## Jar Usage and Build Notes
 

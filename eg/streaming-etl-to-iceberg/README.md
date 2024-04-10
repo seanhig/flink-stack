@@ -2,6 +2,7 @@
 ## MySQL and PostgrSQL Sources -> MySQL Target Summary Table -> AWS S3 Iceberg Data Lake
 This example uses CDC to capture changes on source MySQL and PostgreSQL tables, and joins them to create a new target table in another MySQL database.  Changes are replicated in real-time to the target table.  The job is defined using only `Flink-SQL` (no custom Java code).
 
+![](./images/Lake-flink-stack-icberg-demo.png)
 ## Requirements
 
 - MySQL and PostgreSQL servers.  The [database-stack](https://github.com/seanhig/database-stack) was used in this example and works nicely.
@@ -221,15 +222,15 @@ Job ID: 51624193b43424c4ad780bc2a3dbcf16
 
 Open the `localhost:8081` Flink management site and look under `Jobs/Running Jobs` and observe the `MySQL-enriched_orders` job.
 
-![Flink Running Job](examples/flink-running-sql-job.jpg)
+![Flink Running Job](images/flink-running-sql-job.jpg)
 
 Drill down into the job for additional details:
 
-![Flink Job Detail](examples/flink-job-detail.jpg)
+![Flink Job Detail](images/flink-job-detail.jpg)
 
 As well as detailed statistics:
 
-![Flink Job Stats](examples/flink-job-stats.jpg)
+![Flink Job Stats](images/flink-job-stats.jpg)
 
 From the `Flink SQL>` prompt you can enter commands like:
 
