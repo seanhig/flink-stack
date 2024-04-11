@@ -1,10 +1,7 @@
 -- Set options
-SET execution.checkpointing.interval = 3s;
+SET execution.checkpointing.interval = 600s;
 SET sql-client.execution.result-mode = 'tableau' ;
 SET 'sql-client.verbose' = 'true';
-
-ADD JAR '/jar-packs/flink-stack-mysql.jar';
-ADD JAR '/jar-packs/flink-stack-postgres.jar';
 
 CREATE CATALOG hive_catalog WITH (
     'type' = 'hive',

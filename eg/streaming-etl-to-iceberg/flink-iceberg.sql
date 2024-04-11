@@ -1,8 +1,5 @@
-SET execution.checkpointing.interval = 3s;
-
+SET execution.checkpointing.interval = 600s;
 SET 'sql-client.verbose' = 'true';
-
-ADD JAR '/jar-packs/flink-stack-mysql.jar';
 
 -- Iceberg CDC Source table
 

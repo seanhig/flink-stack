@@ -4,6 +4,7 @@ host
 target
 jars/*.jar
 *.jar 
+jars
 
 data
 

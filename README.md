@@ -44,9 +44,15 @@ docker compose build
 docker compose up -d
 ```
 
-> The build will download hadoop and fetch a number of dependency jars.  Additional `jars` can be added to the `maven pom.xml` and the container can be re-built (However, this can be trickey, see more [below](#jar-usage-and-build-notes)).
+This builds the base image with all depdencies, which include:
 
-And then once the stack is up and running you can shell into the `Flink-SQL client`:
+- CDC Connectors & JDBC Drivers for MySQL, Postgres, Oracle and SQL Server
+- SerDe formats for JSON, Avro, Parquet and Iceberg (CSV and flat file are built into Flink)
+- Hive Metastore dependencies for the local persistent Data Catalog
+
+> The build will download hadoop and fetch a number of dependency jars into `/opt/flink/lib/stack` based on a Maven `pom.xml` file.  Additional `jars` can be added to the `maven pom.xml` and the container can be re-built, or they can be bundled into individual `jar-packs` and added at runtime (see below).
+
+Once the stack is up and running you can shell into the `Flink-SQL client`:
 
 ```
 ./sql-client.sh
@@ -75,11 +81,9 @@ Flink is a great project, but an excellent illustration of the mess that has bec
 
 Flink describes the [class loader hell](https://nightlies.apache.org/flink/flink-docs-master/docs/ops/debugging/debugging_classloading/) nicely.
 
-I started out trying to keep Flink as pure as possible, with all required dependencies bundled into jars to be loaded by the Client class loader on a per job basis... but this simply does not work in many cases (as is the case with most of the Flink documentation examples).  So through trial and error I had to add some jars directly to the `/opt/flink/lib/stack` folder or they would simply not be picked up by the myriad of class loaders in the correct order/context.  `Iceberg` and `JDBC` are good examples of this.
+In the end adding everything to `/opt/flink/lib/stack` worked best with the least class loader problems in `FLink-SQL` jobs.  This is the default.
 
-Core formats `JSON, Parquet and AVRO` were also added to the image. `CSV` is built-in.
-
-For situations where client level class loading worked, they are bundled into `Jar Packs` in the `/jar-packs` folder and mounted to the containers so that from within the `Flink SQL Client` they can be dynamically included:
+Work is in progress to create a leaner base image and use bundled dependency jars into `Jar Packs` to be dynamically included, but this does not work in all cases. (eg. Adding a jar that contains sereral of the CDC connectors will not register all connectors, so those must be separated).
 
 ```
 ADD JAR '/jar-packs/flink-stack-mysql.jar';

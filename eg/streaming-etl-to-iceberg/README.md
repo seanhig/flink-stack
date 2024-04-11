@@ -266,8 +266,6 @@ SET execution.checkpointing.interval = 3s;
 
 SET 'sql-client.verbose' = 'true';
 
-ADD JAR '/jar-packs/flink-stack-mysql.jar';
-
 -- Iceberg CDC Source table
 
 CREATE TABLE enriched_orders_cdc (
