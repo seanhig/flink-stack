@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.flink.app</groupId>
+  <artifactId>flink-stack-serde</artifactId>
+  <version>1.0</version>
+ 
+  <name>flink-stack-serde</name>
+ 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <flinkjdbc.version>3.0.1</flinkjdbc.version>
+    <flink.version>1.19.0</flink.version>
+  </properties>
+ 
+  <dependencies>
+    
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-json</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-avro</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+	    <groupId>org.apache.flink</groupId>
+	    <artifactId>flink-parquet</artifactId>
+	    <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-parquet</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.parquet</groupId>
+        <artifactId>parquet-avro</artifactId>
+        <version>1.12.2</version>
+        <exclusions>
+        <!--
+            <exclusion>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-client</artifactId>
+            </exclusion>
+        -->
+            <exclusion>
+                <groupId>it.unimi.dsi</groupId>
+                <artifactId>fastutil</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+
+  </dependencies>
+ 
+  <build>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    </pluginManagement>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.1.1</version>
+
+            <configuration>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+
+            <executions>
+                <execution>
+                    <id>make-assembly</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
+
+        </plugin>
+    </plugins>        
+  </build>
+</project>

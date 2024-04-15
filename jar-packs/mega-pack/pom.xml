@@ -24,7 +24,6 @@
         <version>${flinkjdbc.version}</version>
     </dependency>
 
-
     <dependency>
       <artifactId>flink-cdc-pipeline-connector-mysql</artifactId>
       <groupId>com.ververica</groupId>

@@ -3,6 +3,13 @@ SET execution.checkpointing.interval = 600s;
 SET sql-client.execution.result-mode = 'tableau' ;
 SET 'sql-client.verbose' = 'true';
 
+ADD JAR '/jar-packs/flink-stack-mysql.jar';
+
+ADD JAR '/jar-packs/flink-stack-postgres.jar';
+
+ADD JAR '/jar-packs/flink-stack-jdbc.jar';
+
+
 CREATE CATALOG hive_catalog WITH (
     'type' = 'hive',
     'hive-conf-dir' = '/opt/flink/conf'
@@ -100,9 +107,6 @@ INSERT INTO enriched_orders
  FROM orders AS o
  LEFT JOIN products AS p ON o.product_id = p.id
  LEFT JOIN shipments AS s ON o.order_id = s.order_id;
-
-
-
 
 
 
