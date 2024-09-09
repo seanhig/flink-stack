@@ -1,7 +1,8 @@
 FROM apache/hive:4.0.0
 
 USER root
-RUN apt-get update && apt-get install -y curl 
+RUN apt-get clean && apt-get update 
+RUN apt-get install -y curl 
 
 RUN curl https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.10.2/hadoop-aws-2.10.2.jar -o /opt/hive/lib/hadoop-aws-2.10.2.jar && \
     curl https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.20.18/bundle-2.20.18.jar -o /opt/hive/lib/bundle-2.20.18.jar && \

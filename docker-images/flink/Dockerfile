@@ -1,6 +1,6 @@
 ARG exclude_deps=false
 
-FROM flink:1.19.0-scala_2.12 as base
+FROM flink:1.19.0-scala_2.12 AS base
 
 RUN apt-get update && apt-get install -y awscli maven wget
 

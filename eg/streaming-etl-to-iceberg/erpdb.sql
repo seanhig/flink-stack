@@ -1,4 +1,5 @@
 -- MySQL source
+SET GLOBAL binlog_format = 'ROW';
 CREATE DATABASE erpdb;
 USE erpdb;
 CREATE TABLE products (

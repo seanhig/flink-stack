@@ -1,5 +1,5 @@
 -- Set options
-SET execution.checkpointing.interval = 600s;
+SET execution.checkpointing.interval = 30s;
 SET sql-client.execution.result-mode = 'tableau' ;
 SET 'sql-client.verbose' = 'true';
 
@@ -109,4 +109,82 @@ INSERT INTO enriched_orders
  LEFT JOIN shipments AS s ON o.order_id = s.order_id;
 
 
+--- VM 
 
+CREATE TABLE products (
+    id INT,
+    name STRING,
+    description STRING,
+    PRIMARY KEY (id) NOT ENFORCED
+  ) WITH (
+    'connector' = 'mysql-cdc',
+    'hostname' = '192.168.1.24',
+    'port' = '3306',
+    'username' = 'root',
+    'password' = 'Fender2000',
+    'database-name' = 'erpdb',
+    'table-name' = 'products'
+  );
+
+CREATE TABLE orders (
+   order_id INT,
+   order_date TIMESTAMP(0),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+ ) WITH (
+   'connector' = 'mysql-cdc',
+   'hostname' = '192.168.1.24',
+   'port' = '3306',
+   'username' = 'root',
+   'password' = 'Fender2000',
+   'database-name' = 'erpdb',
+   'table-name' = 'orders'
+ );
+
+-- Flink SQL to define shipments from PostgreSQL shipdb
+CREATE TABLE shipments (
+   shipment_id INT,
+   order_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (shipment_id) NOT ENFORCED
+ ) WITH (
+   'connector' = 'postgres-cdc',
+   'hostname' = '192.168.1.24',
+   'port' = '5432',
+   'username' = 'postgres',
+   'password' = 'Fender2000',
+   'database-name' = 'shipdb',
+   'schema-name' = 'public',
+   'table-name' = 'shipments',
+   'decoding.plugin.name' = 'pgoutput',
+   'slot.name' = 'flink'
+ );
+
+
+ -- Flink SQL to define the target enriched_orders table in the MySQL operations
+CREATE TABLE enriched_orders (
+   order_id INT,
+   order_date TIMESTAMP(3),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   shipment_id INT,
+   origin STRING,
+   destination STRING,
+   is_arrived BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+  ) WITH (
+    'connector.type' = 'jdbc',
+    'connector.url' = 'jdbc:mysql://192.168.1.24:3306/operations',
+    'connector.username' = 'root',
+    'connector.password' = 'Fender2000',
+    'connector.table' = 'enriched_orders'
+  );

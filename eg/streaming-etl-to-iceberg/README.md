@@ -78,7 +78,7 @@ CREATE TABLE enriched_orders (
 
 ```
 
-## PostreSQL Setup
+## PostgreSQL Setup
 
 PostgreSQL hosts the `shipdb` database which contains the `shipments` table.
 
@@ -106,9 +106,9 @@ VALUES (default,10001,'Beijing','Shanghai',false),
 
 Start the `Flink-SQL` client:
 
-`docker-compose run sql-client`
+`docker compose run sql-client`
 
-At the `Flink SQL>` prompt, enter the statements in the `flink.sql` script one by one.
+At the `Flink SQL>` prompt, enter the statements in the `flink-cdc.sql` script one by one.
 
 ```
 -- Set options
@@ -188,7 +188,7 @@ CREATE TABLE enriched_orders (
    PRIMARY KEY (order_id) NOT ENFORCED
   ) WITH (
     'connector.type' = 'jdbc',
-    'connector.url' = 'jdbc:mysql://host.docker.internal:3306/operational_datastore',
+    'connector.url' = 'jdbc:mysql://host.docker.internal:3306/operations',
     'connector.username' = 'root',
     'connector.password' = 'Fender2000',
     'connector.table' = 'enriched_orders'
