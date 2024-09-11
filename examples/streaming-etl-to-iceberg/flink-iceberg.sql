@@ -1,8 +1,8 @@
 SET execution.checkpointing.interval = 30s;
 SET 'sql-client.verbose' = 'true';
 
-ADD JAR '/jar-packs/flink-stack-mysql.jar';
-ADD JAR '/jar-packs/flink-stack-iceberg.jar';
+-- ADD JAR '/jar-packs/flink-stack-mysql.jar';
+-- ADD JAR '/jar-packs/flink-stack-iceberg.jar';
 
 -- Iceberg CDC Source table
 
@@ -65,5 +65,3 @@ SET 'pipeline.name' = 'Iceberg-enriched-orders-aws';
 
 -- This will create the streaming CDC to Iceberg job
 INSERT INTO iceberg_catalog.iceberg_orders.enriched_orders_lake SELECT * FROM default_catalog.default_database.enriched_orders_cdc;
-
--- Time travel Query

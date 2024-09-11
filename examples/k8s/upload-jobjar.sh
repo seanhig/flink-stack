@@ -1,0 +1,1 @@
+curl -X POST -H "Expect:" -F "jarfile=@../streaming-etl-java/target/enriched-orders-job-1.0.0.jar" http://localhost:8081/jars/upload

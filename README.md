@@ -60,7 +60,7 @@ Once the stack is up and running you can shell into the `Flink-SQL client`:
  
 > Scaling the `taskmanager` can be done with `docker-compose scale taskmanager=3`.  Each taskmanager is configured to support 100 job slots.
 
-See the [Streaming ETL to Iceberg](eg/streaming-etl-to-iceberg/) example to see what the `flink-stack` can do.
+See the [Streaming ETL to Iceberg](examples/streaming-etl-to-iceberg/) example to see what the `flink-stack` can do.
 
 Happy flinking!
 

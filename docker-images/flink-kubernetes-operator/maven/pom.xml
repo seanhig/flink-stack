@@ -1,0 +1,355 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.flink.app</groupId>
+  <artifactId>flink-stack-core</artifactId>
+  <version>1.0</version>
+ 
+  <name>flink-stack-core</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+ 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <flinkjdbc.version>3.0.1</flinkjdbc.version>
+    <flink.version>1.19.0</flink.version>
+    <hadoop.version>2.8.5</hadoop.version>
+  </properties>
+ 
+  <dependencies>
+    
+    <dependency>
+        <groupId>com.ververica</groupId>
+        <artifactId>flink-cdc-base</artifactId>
+        <version>${flinkjdbc.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <artifactId>flink-cdc-pipeline-connector-mysql</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flinkjdbc.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-mysql-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flinkjdbc.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-postgres-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flinkjdbc.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-oracle-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flinkjdbc.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>flink-sql-connector-sqlserver-cdc</artifactId>
+      <groupId>com.ververica</groupId>
+      <version>${flinkjdbc.version}</version>
+    </dependency>
+
+
+    <dependency>
+        <artifactId>flink-connector-jdbc</artifactId>
+        <groupId>org.apache.flink</groupId>
+        <version>3.1.2-1.18</version>
+    </dependency>
+
+    <dependency>
+        <artifactId>flink-connector-jdbc_2.12</artifactId>
+        <groupId>org.apache.flink</groupId>
+        <version>1.14.6</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>ojdbc10</artifactId>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <version>19.22.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <version>12.6.1.jre11</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <version>8.3.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.7.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.iceberg</groupId>
+      <artifactId>iceberg-core</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.iceberg</groupId>
+      <artifactId>iceberg-flink-runtime-1.18</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.iceberg</groupId>
+        <artifactId>iceberg-aws-bundle</artifactId>
+        <version>1.5.0</version>
+    </dependency>
+
+   <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-s3-fs-hadoop</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-json</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-avro</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+	    <groupId>org.apache.flink</groupId>
+	    <artifactId>flink-parquet</artifactId>
+	    <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-parquet</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.parquet</groupId>
+        <artifactId>parquet-avro</artifactId>
+        <version>1.12.2</version>
+        <exclusions>
+        <!--
+            <exclusion>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-client</artifactId>
+            </exclusion>
+        -->
+            <exclusion>
+                <groupId>it.unimi.dsi</groupId>
+                <artifactId>fastutil</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-connector-hive-3.1.3_2.12</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+
+<!--
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-aws</artifactId>
+        <version>${hadoop.version}</version>
+    </dependency>
+
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-connector-hive-3.1.3_2.12</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+
+    <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-core</artifactId>
+        <version>6.0.7</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-api-jdo</artifactId>
+        <version>6.0.2</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-rdbms</artifactId>
+        <version>6.0.7</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-common</artifactId>
+        <version>3.1.3</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-core</artifactId>
+        <version>6.0.7</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-exec</artifactId>
+        <version>3.1.3</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-connector-hive-3.1.3_2.12</artifactId>
+        <version>1.19.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-exec</artifactId>
+        <version>3.1.3</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.thrift</groupId>
+        <artifactId>libfb303</artifactId>
+        <version>0.9.3</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr-runtime</artifactId>
+        <version>3.5.3</version>
+    </dependency>
+-->
+
+<!-- 
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-client</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs-client</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+-->
+
+<!--
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-parquet</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-parquet</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-avro</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-orc</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-streaming-java</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+   <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-s3-fs-hadoop</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-aws</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-bundle</artifactId>
+        <version>1.12.692</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-metrics-dropwizard</artifactId>
+        <version>${flink.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>1.11.3</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs-client</artifactId>
+        <version>3.4.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>1.11.3</version>
+    </dependency>
+-->
+
+  </dependencies>
+ 
+  <build>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    </pluginManagement>
+  </build>
+</project>

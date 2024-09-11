@@ -1,0 +1,22 @@
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
+metadata:
+  name: enriched-orders-cluster
+spec:
+  image: idstudios/flink-enriched-orders:1.19
+  flinkVersion: v1_19
+  flinkConfiguration:
+    taskmanager.numberOfTaskSlots: "5"
+  serviceAccount: flink
+  jobManager:
+    resource:
+      memory: "2048m"
+      cpu: 1
+  taskManager:
+    resource:
+      memory: "2048m"
+      cpu: 1
+  job:
+    jarURI: local:///flink-jobjars/enriched-orders-job-1.0.0.jar
+    parallelism: 2
+    upgradeMode: stateless

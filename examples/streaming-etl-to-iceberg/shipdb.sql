@@ -1,5 +1,4 @@
 -- PostgreSQL source
-
 CREATE TABLE shipments (
   shipment_id SERIAL NOT NULL PRIMARY KEY,
   order_id SERIAL NOT NULL,
