@@ -1,23 +1,24 @@
 # Flink Stack
 
-A `docker-compose` stack for Flink and Flink-SQL.
+A `docker-compose` stack for Flink and Flink-SQL development.
 
-The primary focus of this `Flink Stack` is to support CDC to an AWS S3 Iceberg Data Lake in real time, enabling Athena and the Data Lake to act as a severless analytical datastore.  
+The primary focus of this `Flink Stack` was to support CDC to an AWS S3 Iceberg Data Lake in real time, enabling Athena and the Data Lake to act as a severless analytical datastore.  
 
 ![Flink Stack Overview](docs/images/Lake-flink-stack-quick.png)
 
-The `Flink Stack` can handle moving data between source systems using CDC, as well as migrating that data to Iceberg on S3 in real time.  Everything can be managed through the `Fink SQL Client` using existing connectors and does not require custom Java development.
+The [streaming-etl-to-iceberg](examples/streaming-etl-to-iceberg/) walkthrough illustrates this flow.  It requires no Java development and uses only `Flink SQL` and the `SQL Client` for deployment.
 
-The `Flink Stack` can perform both streaming and batch ETL.
 
-`CDC Sources` can be joined across systems to create real-time consolidated views, which can then be replicated to Apache Iceberg on S3, also in real-time.  `Iceberg` will update the `Glue Catalog` to enable Athena to read results in real time.
+`CDC Sources` can be joined across systems to create real-time consolidated views accross disperate backend systems, which can then be replicated to Apache Iceberg on S3, in real-time.  This is the power of `Iceberg`, a `serde` format that allows for ongoing upserts. `Iceberg` will also update the `Glue Catalog` to enable Athena to read the updated results in real time.
 
-`Apache Iceberg` stores all change over time allowing for custom queries that show record change over time, or point in time values.
+`Apache Iceberg` stores all change over time allowing for custom queries that show record change deltas, or point in time values, adding additional power to the platform.
+
+And because the datastore is `Icerberg serde`, operating costs are pennies on the dollar and scale-out serverless SQL engines such as [Athena]() or [Trino]() can be used to achieve highly efficient and performant analytics.
 
 ![Flink Stack Full](docs/images/Lake-flink-stack-full.png)
 
 
-The `Flink Stack` includes:
+The `Flink Stack` currently includes:
 
 - Minio for local S3 object storage
 - Hive Metastore as a persistent Data Catalog
@@ -25,13 +26,12 @@ The `Flink Stack` includes:
 - Flink CDC Connectors and [Jar Packs](./jar-packs)
 - Integration of Apache Iceberg with AWS Glue
 
-> It has been quite a ride getting Flink to standup with all of the other Apache dependencies.  Hopefully this stack spares others some suffering.
+> It has been quite a ride getting Flink to standup with all of the other Apache dependencies.  Hopefully this stack spares others some suffering.  There is much to be gleaned from the examples and structure.
 
 ## Requirements
 
 - Docker 
 - Bash
-- The [database-stack](https://github.com/seanhig/database-stack) is recommended.
 
 ## Setup
 
@@ -76,19 +76,19 @@ Essentially a catalog will persist your table definitions and source file locati
 2. `Glue` via Iceberg for the `Glue Data Catalog` integration.  Generally this catalog is only used for target Iceberg tables.
 
 ## Jar Usage and Build Notes
+It took a bit of hammering to finally grok the idea that core JARS such as the CDC or JDBC jars do not belong in JAR packs!  Nor do they belong in Java based job jars.
 
-Flink is a great project, but an excellent illustration of the mess that has become Java Class loaders.  The entire mechanism when combined with dependency injection seems to completely overlook the complexity of managing the runtime environment.  Trying to get the various Apache projects to work together despite dependency conflicts is illustrative, and the nearly useless `ClassNotFoundException` or `java.lang.NoClassDefFoundError` exist only to waste your time.
+There is still residue from these attempts in the repo.
 
-Flink describes the [class loader hell](https://nightlies.apache.org/flink/flink-docs-master/docs/ops/debugging/debugging_classloading/) nicely.
+In `FlinkSQL` it is possible to add additional dependencies... however, this is not a good model for things like CDC connectors or drivers... it can work to a limited degree, but generally leads to class loading conflicts at runtime on anything non-trival.
 
-In the end adding everything to `/opt/flink/lib/stack` worked best with the least class loader problems in `FLink-SQL` jobs.  This is the default.
-
-Work is in progress to create a leaner base image and use bundled dependency jars into `Jar Packs` to be dynamically included, but this does not work in all cases. (eg. Adding a jar that contains sereral of the CDC connectors will not register all connectors, so those must be separated).
-
+Eg.
 ```
 ADD JAR '/jar-packs/flink-stack-mysql.jar';
 ```
 
+A better approach is to build your own Flink image with the core dependencies flushed out and working, which is the approach of `flink-stack` for both the docker compose and k8s operator deployments.
+
+### Hadoop Dependency
 At the present it seems `HADOOP_CLASSPATH` needs to exist, at least in some form, and the easiest way to accomplish this is to bundle the latest hadoop version into the Flink image.  Bundling Hadoop jars without shading them as embedded (in a Java code usage model) simply does not work.
 
-See the `eg` folder for examples, most are based on the `streaming-etl-to-iceberg` foundation.

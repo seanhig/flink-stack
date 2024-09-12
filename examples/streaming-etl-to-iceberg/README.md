@@ -3,6 +3,7 @@
 This example uses CDC to capture changes on source MySQL and PostgreSQL tables, and joins them to create a new target table in another MySQL database.  Changes are replicated in real-time to the target table.  The job is defined using only `Flink-SQL` (no custom Java code).
 
 ![](./images/Lake-flink-stack-icberg-demo.png)
+
 ## Requirements
 
 - MySQL and PostgreSQL servers.  The [database-stack](https://github.com/seanhig/database-stack) was used in this example and works nicely.
@@ -11,7 +12,6 @@ This example uses CDC to capture changes on source MySQL and PostgreSQL tables, 
 - Bash 
 
 ## MySQL Setup
-
 MySQL hosts the `erpdb` database which contains the `products` and `orders` source tables.
 
 Run the `erpdb.sql` script in MySQL.
@@ -79,7 +79,6 @@ CREATE TABLE enriched_orders (
 ```
 
 ## PostgreSQL Setup
-
 PostgreSQL hosts the `shipdb` database which contains the `shipments` table.
 
 Run the `shipdb.sql` script in PostgreSQL
@@ -103,7 +102,6 @@ VALUES (default,10001,'Beijing','Shanghai',false),
 ```
 
 ## Flink-SQL for MySQL, Postgres CDC to MySQL Summary Table (enriched_orders)
-
 Start the `Flink-SQL` client:
 
 `docker compose run sql-client`
