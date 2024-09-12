@@ -22,3 +22,9 @@ This `job jar` can be uploaded to the `flink-stack` via the `Subnit New Job` fea
 
 For the [Kubernetes](../k8s/) deployment example this is automated by building the job jar into the `Flink` image, which is likely the best immutable approach for production deployment.
 
+
+## Manual Deployment Config Path
+
+```
+--config-filepath /host/examples/k8s/job-image/enriched-orders-job.properties
+```
