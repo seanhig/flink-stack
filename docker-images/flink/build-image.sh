@@ -1,1 +1,1 @@
-docker build -t idstudios/flink:1.19 .
+docker build -t idstudios/flink:1.20 .

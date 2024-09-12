@@ -1,6 +1,6 @@
 ARG exclude_deps=false
 
-FROM flink:1.19.0-scala_2.12 AS base
+FROM flink:1.20.0-scala_2.12 AS base
 
 RUN apt-get update && apt-get install -y awscli maven wget
 
@@ -27,14 +27,6 @@ WORKDIR /maven
 RUN mkdir /opt/flink/lib/stack
 RUN chmod +x /maven/update-jars.sh
 RUN ./update-jars.sh
-
-WORKDIR /opt/flink/lib/stack
-
-#RUN wget https://repo1.maven.org/maven2/org/apache/hive/hive-common/3.1.3/hive-common-3.1.3.jar
-#RUN wget https://repo1.maven.org/maven2/org/apache/derby/derby/10.15.2.0/derby-10.15.2.0.jar
-#RUN wget https://repo1.maven.org/maven2/org/apache/derby/derbytools/10.15.2.0/derbytools-10.15.2.0.jar
-#RUN wget https://repo1.maven.org/maven2/org/apache/derby/derbyshared/10.15.2.0/derbyshared-10.15.2.0.jar
-#RUN wget https://repo1.maven.org/maven2/org/datanucleus/javax.jdo/3.2.1/javax.jdo-3.2.1.jar
 
 FROM branch-exclude-deps-${exclude_deps} AS final
 
