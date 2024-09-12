@@ -64,6 +64,14 @@ See the [Streaming ETL to Iceberg](examples/streaming-etl-to-iceberg/) example t
 
 Happy flinking!
 
+## Flink Examples
+
+[streaming-etl-to-iceberg](examples/streaming-etl-to-iceberg/README.md) demonstrates the core flow of joining data between two backend systems: `MySQL ERPDB` and `PostgreSQL ShipDB`, accross three tables via `CDC`, with an auto-updating summary table stored in `MySQL OperationsDB` which is then replicated in real-time via `CDC` again to `Apache Iceberg Serde` stored in `AWS S3 Lake Formation` to be read by `AWS Athena`.
+
+[streaming-etl-java](examples/streaming-etl-java/README.md) implementes the `Flink SQL` functionality in the `streaming-etl-to-iceberg` example using `Java` and the `Flink Table API`, and packages it into a job jar for deployment.
+
+[k8s](examples/k8s/README.md) illustrates how to deploy the `Flink Kubernetes Operator` to a K8s cluster and then how to define a Job `YAML` declaration file that will deploy the `streaming-etl-java job jar` into a dedicated job flink cluster running in the Kubernetes environment.
+
 ## Flink Catalogs
 
 The folks at decodable put out a lot of good info that has helped with navigating the Apache docs, or lack therof.  This is a great primer [article](https://www.decodable.co/blog/catalogs-in-flink-sql-a-primer) on `Flink Catalogs`.
