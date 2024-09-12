@@ -12,19 +12,34 @@ This maven project implements the [Flink SQL Streaming ETL to Iceberg](../stream
 
 > Visual Studio Code with the Java Lang Pack was used as the IDE.
 
+## Building the Flink Job Jar
+
 ```
 mvn clean compile package
 ```
 
-Will produce the `enriched-orders-job-1.0.0.jar` in the `target` folder.
+This will produce the `enriched-orders-job-1.0.0.jar` in the `target` folder.
 
 This `job jar` can be uploaded to the `flink-stack` via the `Subnit New Job` feature of the  [Job Manager UI](http://localhost:8081).  Once the jar is uploaded, the `Enriched Orders` job can be `Submitted`.
 
 For the [Kubernetes](../k8s/) deployment example this is automated by building the job jar into the `Flink` image, which is likely the best immutable approach for production deployment.
 
+## Job Configuration
+The ideal operating environment would be Flink on K8s using the operator.  In this environment it is common to use ENV vars for configuration items, but that wouldn't suit the development model in Flink.
+
+After some consideration Java `.properties` files seemed to be the best option.
+
+The `enriched-orders-job.properties` file is bundled into the custom `Flink` docker container for k8s operator deployment.  The default location is set to the image location.
+
+> TODO: move the secrets out of the properties files and have only references to the authenticated secret store (perhaps AWS to start).  Normally one would not commit secrets in a `.properties` file into a repo, or even store them as such, but since this is example code it saves time and trouble.
+
+This follows an immutable deployment model where configuration updates would entail new versions be deployed and aligns well with Kubernetes best practice.
 
 ## Manual Deployment Config Path
+When manually pushing the `job jar` up to the local `flink-stack` docker compose environment, which is handy for testing and development, pass the following parameter as the `program arguments`:
 
 ```
 --config-filepath /host/examples/k8s/job-image/enriched-orders-job.properties
 ```
+
+> This references the same properties file used for k8s, as the host is a mapped folder on the docker compose image instance for flink task manager and job manager.
