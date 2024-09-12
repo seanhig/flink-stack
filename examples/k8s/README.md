@@ -78,7 +78,7 @@ spec:
     upgradeMode: stateless
 ```
 
-Note the `spec:image` setting uses our custom built job jar so that the `job:jarURI` setting can find it locally.  Although `jobURI` can leverage external `HTTPS://` and `S3://` and other distributed stores, pre-building a dedicated job image allows for the inclusion of all core system dependencies, which often aren't suitable for deployment in a fat job `uber.jar`.
+Note the `spec:image` setting uses our custom built job image so that the `job:jarURI` setting can find it locally.  Although `jobURI` can leverage external `HTTPS://` and `S3://` and other distributed stores, pre-building a dedicated job image allows for the inclusion of all core system dependencies, which often aren't suitable for deployment in a fat job `uber.jar`.
 
 Once running we can port-forward to the new service:
 ```
