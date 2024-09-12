@@ -19,6 +19,9 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - MYSQL_ERPDB_PWD=${MYSQL_ERPDB_PWD}
+      - MYSQL_OPSDB_PWD=${MYSQL_OPSDB_PWD}
+      - POSTGRES_SHIPDB_PWD=${POSTGRES_SHIPDB_PWD}
     volumes:
       - ./data/:/data
       - ./jar-packs:/jar-packs
@@ -48,6 +51,9 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - MYSQL_ERPDB_PWD=${MYSQL_ERPDB_PWD}
+      - MYSQL_OPSDB_PWD=${MYSQL_OPSDB_PWD}
+      - POSTGRES_SHIPDB_PWD=${POSTGRES_SHIPDB_PWD}
     volumes:
       - ./jar-packs:/jar-packs
       - ./:/host
@@ -72,6 +78,9 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - MYSQL_ERPDB_PWD=${MYSQL_ERPDB_PWD}
+      - MYSQL_OPSDB_PWD=${MYSQL_OPSDB_PWD}
+      - POSTGRES_SHIPDB_PWD=${POSTGRES_SHIPDB_PWD}
     volumes:
       - ./jar-packs:/jar-packs
       - ./:/host

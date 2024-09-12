@@ -78,7 +78,8 @@ public class JobConfigItems {
     this.mysqlERPDBUsername = mysqlERPDBUsername;
   }
   public String getMysqlERPDBPassword() {
-    return mysqlERPDBPassword;
+    // pull the secret from the environment
+    return System.getenv(mysqlERPDBHostName);
   }
   public void setMysqlERPDBPassword(String mysqlERPDBPassword) {
     this.mysqlERPDBPassword = mysqlERPDBPassword;
@@ -122,7 +123,7 @@ public class JobConfigItems {
     this.postgresShipDBUsername = postgresShipDBUsername;
   }
   public String getPostgresShipDBPassword() {
-    return postgresShipDBPassword;
+    return System.getenv().get(postgresShipDBPassword);
   }
   public void setPostgresShipDBPassword(String postgresShipDBPassword) {
     this.postgresShipDBPassword = postgresShipDBPassword;
@@ -152,7 +153,7 @@ public class JobConfigItems {
     this.mysqlOpsDBUsername = mysqlOpsDBUsername;
   }
   public String getMysqlOpsDBPassword() {
-    return mysqlOpsDBPassword;
+    return System.getenv().get(mysqlOpsDBPassword);
   }
   public void setMysqlOpsDBPassword(String mysqlOpsDBPassword) {
     this.mysqlOpsDBPassword = mysqlOpsDBPassword;

@@ -31,7 +31,12 @@ After some consideration Java `.properties` files seemed to be the best option.
 
 The `enriched-orders-job.properties` file is bundled into the custom `Flink` docker container for k8s operator deployment.  The default location is set to the image location.
 
-> TODO: move the secrets out of the properties files and have only references to the authenticated secret store (perhaps AWS to start).  Normally one would not commit secrets in a `.properties` file into a repo, or even store them as such, but since this is example code it saves time and trouble.
+## Secrets
+The properties file, where it references secrets, supplies only ENV variable names.
+
+The `docker compose` has these defined in the `.env` file.
+
+When running in a production context such as K8s, the secrets are mapped to ENV variables at deployment of the container.
 
 This follows an immutable deployment model where configuration updates would entail new versions be deployed and aligns well with Kubernetes best practice.
 

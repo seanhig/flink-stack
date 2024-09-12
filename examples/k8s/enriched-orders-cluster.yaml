@@ -8,6 +8,24 @@ spec:
   flinkConfiguration:
     taskmanager.numberOfTaskSlots: "5"
   serviceAccount: flink
+  podTemplate:
+    spec:
+      containers:
+        # Do not change the main container name
+        - name: flink-main-container
+          env:
+            - name: MYSQL_ERPDB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-mysql-erpdb-password
+            - name: MYSQL_OPSDB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-mysql-opsdb-password
+            - name: POSTGRES_SHIPDB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-postgres-shipdb-password
   jobManager:
     resource:
       memory: "2048m"

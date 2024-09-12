@@ -45,37 +45,21 @@ The `idstudios/flink-enriched-orders:1.20` docker image now contains our job jar
 
 Note that the JAR must be already `packaged` in the [streaming-etl-java](../streaming-etl-java/) example as it is dependent on that `Java job jar`.  If the image build errors out ensure that the JAR has been built and exists.
 
+## Secrets
+Secrets are referenced in the `enriched-orders-cluster.yaml` job spec, and must be pre-defined in the cluster, as per:
+
+```
+kubectl create secret generic enriched-orders-mysql-erpdb-password --from-literal=Fender2000
+kubectl create secret generic enriched-orders-postgres-shipdb-password --from-literal=Fender2000
+kubectl create secret generic enriched-orders-mysql-opsdb-password --from-literal=Fender2000
+```
+
+Once the secrets have been defined the job image and spec can be deployed.
+
 ## Deploy Enriched Orders Job Image
-This will deploy the `enriched-orders-job-1.0.0.jar` via the `idstudios/flink-enriched-orders:1.20` docker image to a new dedicated Flink cluster deployment in K8s.
+Next we deploy the `enriched-orders-job-1.0.0.jar` via the `idstudios/flink-enriched-orders:1.20` docker image to a new dedicated Flink cluster deployment in K8s.
 ```
 kubectl create -f enriched-orders-cluster.yaml
-```
-
-which is defined as follows:
-
-```
-apiVersion: flink.apache.org/v1beta1
-kind: FlinkDeployment
-metadata:
-  name: enriched-orders-cluster
-spec:
-  image: idstudios/flink-enriched-orders:1.20
-  flinkVersion: v1_19
-  flinkConfiguration:
-    taskmanager.numberOfTaskSlots: "5"
-  serviceAccount: flink
-  jobManager:
-    resource:
-      memory: "2048m"
-      cpu: 1
-  taskManager:
-    resource:
-      memory: "2048m"
-      cpu: 1
-  job:
-    jarURI: local:///flink-jobjars/enriched-orders-job-1.0.0.jar
-    parallelism: 2
-    upgradeMode: stateless
 ```
 
 Note the `spec:image` setting uses our custom built job image so that the `job:jarURI` setting can find it locally.  Although `jobURI` can leverage external `HTTPS://` and `S3://` and other distributed stores, pre-building a dedicated job image allows for the inclusion of all core system dependencies, which often aren't suitable for deployment in a fat job `uber.jar`.
@@ -86,6 +70,7 @@ kubectl port-forward svc/enriched-orders-cluster-rest 8081
 ```
 
 Now we can open the browser to the dedicated [Job Manager UI](http://localhost:8081) and see our cluster with the running job.
+
 
 #### Using a custom built flink-kubernetes-operator image
 In the odd use case where you need to replace the `flink-operator` image, this is also doable - but the documentation has a few errors and isn't entirely clear on the purpose.  Experimentation revealed it had no affect on the profile of the launched instances and for this we needed a job image as above.
