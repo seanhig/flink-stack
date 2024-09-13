@@ -11,13 +11,13 @@ public class JobConfig {
   private Map<String, String> params = new HashMap<String, String>();
   private ParameterTool config = null;
 
-  protected JobConfig(String filePath)  throws IOException {
+  protected JobConfig(String filePath) throws IOException {
     this.config = ParameterTool.fromPropertiesFile(filePath);
   }
 
   protected void setEnvOverrideValue(String key) {
     String envKey = key.replace(".", "_").toUpperCase();
-    if(System.getenv().containsKey(envKey)) {
+    if (System.getenv().containsKey(envKey)) {
       this.params.put(key, System.getenv().get(envKey));
     } else {
       this.params.put(key, this.config.get(key));
@@ -29,7 +29,7 @@ public class JobConfig {
   }
 
   public static JobConfig fromPropertiesFile(String filePath) throws IOException {
-        
+
     JobConfig jobConfig = new JobConfig(filePath);
 
     jobConfig.setEnvOverrideValue("mysql.erpdb.host.name");
@@ -54,7 +54,5 @@ public class JobConfig {
 
     return jobConfig;
   }
-
-
 
 }
