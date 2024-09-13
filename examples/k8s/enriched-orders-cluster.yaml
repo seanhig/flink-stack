@@ -13,16 +13,19 @@ spec:
       containers:
         # Do not change the main container name
         - name: flink-main-container
+          # values in enriched-orders-job.properties can be overridden
+          # as ENV variables, which will take precedence
+          # K8s SECRETS can be used for sensitive data such as passwords
           env:
-            - name: MYSQL_ERPDB_PWD
+            - name: MYSQL_ERPDB_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: enriched-orders-mysql-erpdb-password
-            - name: MYSQL_OPSDB_PWD
+            - name: MYSQL_OPSDB_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: enriched-orders-mysql-opsdb-password
-            - name: POSTGRES_SHIPDB_PWD
+            - name: POSTGRES_SHIPDB_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: enriched-orders-postgres-shipdb-password

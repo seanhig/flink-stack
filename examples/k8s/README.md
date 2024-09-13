@@ -54,6 +54,8 @@ kubectl create secret generic enriched-orders-postgres-shipdb-password --from-li
 kubectl create secret generic enriched-orders-mysql-opsdb-password --from-literal=Fender2000
 ```
 
+The `enriched-orders-job.properties` file defines the runtime names of the mapped secret ENV variables which contain the injected secrets when the container is launched in k8s.
+
 Once the secrets have been defined the job image and spec can be deployed.
 
 ## Deploy Enriched Orders Job Image

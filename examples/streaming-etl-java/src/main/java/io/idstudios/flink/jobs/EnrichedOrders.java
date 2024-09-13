@@ -11,37 +11,19 @@ import static org.apache.flink.table.api.Expressions.*;
 
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.PipelineOptions;
-import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
 
- public class EnrichedOrders {
+ public class EnrichedOrders extends FlinkJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(EnrichedOrders.class);
     private static final String DEFAULT_CONFIG_PATH = "/flink-jobjars/enriched-orders-job.properties";
   
     public static void main(String[] args) throws Exception {
 
-        var defaultConfigPath = EnrichedOrders.DEFAULT_CONFIG_PATH;
-        JobConfigItems jobConfig = null;
+        loadJobConfig(EnrichedOrders.DEFAULT_CONFIG_PATH, args);
 
-        ParameterTool parameters = ParameterTool.fromArgs(args);
-        if(parameters.has("config-filepath")) {
-            defaultConfigPath = parameters.get("config-filepath");
-            LOG.info("Loading config from specified PATH: " + defaultConfigPath);
-        } else {
-            LOG.info("Loading config from DEFAULT PATH (for k8s): " + defaultConfigPath);
-        }
-
-        try {
-            jobConfig = JobConfigItems.fromPropertiesFile(defaultConfigPath);
-        } catch (Exception e) {
-            LOG.error ("failure attempting to load enriched orders job config from " + defaultConfigPath);
-            LOG.error(e.getMessage(), e);
-            throw e;
-        }
-        
         Configuration config = new Configuration();
         config.set(PipelineOptions.NAME, "MySQL-enriched_orders-Java");
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(config);
@@ -66,11 +48,11 @@ import org.slf4j.Logger;
             ")";
                 
         String productSql = String.format(productsTemplate,
-            jobConfig.getMysqlERPDBHostName(),
-            jobConfig.getMysqlERPDBPort(),
-            jobConfig.getMysqlERPDBUsername(),
-            jobConfig.getMysqlERPDBPassword(),
-            jobConfig.getMysqlERPDBName());
+            jobConfig.get("mysql.erpdb.host.name"),
+            jobConfig.get("mysql.erpdb.db.port"),
+            jobConfig.get("mysql.erpdb.db.username"),
+            jobConfig.get("mysql.erpdb.db.password"),
+            jobConfig.get("mysql.erpdb.db.name"));
 
         String ordersTemplate = "CREATE TABLE orders (\n" +
             "      order_id          INT,\n" +
@@ -91,11 +73,11 @@ import org.slf4j.Logger;
             ")";
 
         String orderSql = String.format(ordersTemplate,
-            jobConfig.getMysqlERPDBHostName(),
-            jobConfig.getMysqlERPDBPort(),
-            jobConfig.getMysqlERPDBUsername(),
-            jobConfig.getMysqlERPDBPassword(),
-            jobConfig.getMysqlERPDBName());
+            jobConfig.get("mysql.erpdb.host.name"),
+            jobConfig.get("mysql.erpdb.db.port"),
+            jobConfig.get("mysql.erpdb.db.username"),
+            jobConfig.get("mysql.erpdb.db.password"),
+            jobConfig.get("mysql.erpdb.db.name"));
 
         String shipTemplate = "CREATE TABLE shipments (\n" + 
             "       shipment_id         INT,\n" + 
@@ -118,14 +100,13 @@ import org.slf4j.Logger;
             ")";
         
         String shipSql = String.format(shipTemplate,
-            jobConfig.getPostgresShipDBHostName(),
-            jobConfig.getPostgresShipDBPort(),
-            jobConfig.getPostgresShipDBUsername(),
-            jobConfig.getPostgresShipDBPassword(),
-            jobConfig.getPostgresShipDBName(),
-            jobConfig.getPostgresShipSchemaName(),
-            jobConfig.getPostgresShipDBSlotname()
-            );
+            jobConfig.get("postgres.shipdb.host.name"),
+            jobConfig.get("postgres.shipdb.db.port"),
+            jobConfig.get("postgres.shipdb.db.username"),
+            jobConfig.get("postgres.shipdb.db.password"),
+            jobConfig.get("postgres.shipdb.db.name"),
+            jobConfig.get("postgres.shipdb.schema.name"),
+            jobConfig.get("postgres.shipdb.db.slotname"));
 
         String enrichedTemplate = "CREATE TABLE enriched_orders (\n" + 
             "       order_id                INT,\n" + 
@@ -150,12 +131,12 @@ import org.slf4j.Logger;
             ")";
 
         String enrichedOrdersSql = String.format(enrichedTemplate,
-            jobConfig.getMysqlOpsDBHostName(),
-            jobConfig.getMysqlOpsDBPort(),
-            jobConfig.getMysqlOpsDBName(),
-            jobConfig.getMysqlOpsDBUsername(),
-            jobConfig.getMysqlOpsDBPassword()
-            );
+            jobConfig.get("mysql.opsdb.host.name"),
+            jobConfig.get("mysql.opsdb.db.port"),
+            jobConfig.get("mysql.opsdb.db.username"),
+            jobConfig.get("mysql.opsdb.db.password"),
+            jobConfig.get("mysql.opsdb.db.name"));
+        
     
         tEnv.executeSql(productSql);
         tEnv.executeSql(orderSql);
