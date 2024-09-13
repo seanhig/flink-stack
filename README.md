@@ -1,29 +1,27 @@
 # Flink Stack
 
-A `docker-compose` stack for Flink and Flink-SQL development.
+A `docker-compose` stack for Flink and Flink-SQL development.  It also illustrates examples of transcribing `Flink SQL` into deployable `Java jars`, built into immutable `Flink containers`, deployed via the `Flink Kubernetes Operator` into a K8s cluster.  See the [Examples](#flink-examples) section below.
 
 The primary focus of this `Flink Stack` was to support CDC to an AWS S3 Iceberg Data Lake in real time, enabling Athena and the Data Lake to act as a severless analytical datastore.  
 
 ![Flink Stack Overview](docs/images/Lake-flink-stack-quick.png)
 
-The [streaming-etl-to-iceberg](examples/streaming-etl-to-iceberg/) walkthrough illustrates this flow.  It requires no Java development and uses only `Flink SQL` and the `SQL Client` for deployment.
-
-
 `CDC Sources` can be joined across systems to create real-time consolidated views accross disperate backend systems, which can then be replicated to Apache Iceberg on S3, in real-time.  This is the power of `Iceberg`, a `serde` format that allows for ongoing upserts. `Iceberg` will also update the `Glue Catalog` to enable Athena to read the updated results in real time.
+
+The [streaming-etl-to-iceberg](examples/streaming-etl-to-iceberg/) walkthrough illustrates this flow.  It requires no Java development and uses only `Flink SQL` and the `SQL Client` for deployment.
 
 `Apache Iceberg` stores all change over time allowing for custom queries that show record change deltas, or point in time values, adding additional power to the platform.
 
-And because the datastore is `Icerberg serde`, operating costs are pennies on the dollar and scale-out serverless SQL engines such as [Athena]() or [Trino]() can be used to achieve highly efficient and performant analytics.
+And because the datastore is `Iceberg serde`, operating costs are pennies on the dollar and scale-out serverless SQL engines such as [Athena]() or [Trino]() can be used to achieve highly efficient and performant analytics. This model also works very well for analytic and visualization support toolsets like PowerBI, Tableau and [Apache SuperSet]().  An AWS Lake Formation data lake provides a cost effective datastore to distribute datasets, and `Iceberg` enables these datasets to be up-to-the-minute fresh.
 
 ![Flink Stack Full](docs/images/Lake-flink-stack-full.png)
-
 
 The `Flink Stack` currently includes:
 
 - Minio for local S3 object storage
 - Hive Metastore as a persistent Data Catalog
 - Zookeeper for HA and job state 
-- Flink CDC Connectors and [Jar Packs](./jar-packs)
+- Flink CDC Connectors 
 - Integration of Apache Iceberg with AWS Glue
 
 > It has been quite a ride getting Flink to standup with all of the other Apache dependencies.  Hopefully this stack spares others some suffering.  There is much to be gleaned from the examples and structure.
@@ -35,7 +33,7 @@ The `Flink Stack` currently includes:
 
 ## Setup
 
-Make sure to copy the `.env-sample` file to a `.env` file and add the correct AWS credentials.
+Make sure to copy the `.env-sample` file to a `.env` file and add the correct AWS credentials and secret settings.
 
 ## Usage
 
