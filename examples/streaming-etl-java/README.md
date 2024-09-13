@@ -24,19 +24,26 @@ This `job jar` can be uploaded to the `flink-stack` via the `Subnit New Job` fea
 
 For the [Kubernetes](../k8s/) deployment example this is automated by building the job jar into the `Flink` image, which is likely the best immutable approach for production deployment.
 
-## Job Configuration
+## Job Configuration and Secrets
 The ideal operating environment would be Flink on K8s using the operator.  In this environment it is common to use ENV vars for configuration items, but that wouldn't suit the development model in Flink.
 
-After some consideration Java `.properties` files seemed to be the best option.
+After some consideration Java `.properties` files seemed to be the best option.  However the values in the `.properties` file can be overridden by ENVIRONMENT variables at runtime.
 
-The `enriched-orders-job.properties` file is bundled into the custom `Flink` docker container for k8s operator deployment.  The default location is set to the image location.
+The [JobConfig](src/main/java/io/idstudios/flink/jobs/JobConfig.java) class implements this override using the following formula:
+
+```
+    String envKey = key.replace(".", "_").toUpperCase();
+
+```
+
+The `enriched-orders-job.properties` file is bundled into the custom `Flink` docker container for k8s operator deployment, but secret values are then overriden by ENVIRONMENT variables.  
+
+> Note: The default location of the `.properties` file is set to the k8s job-image location.  When running in `docker-compose` manually submitted jobs can override this location with a [program argument](#manual-deployment-config-path)
 
 ## Secrets
-The properties file, where it references secrets, supplies only ENV variable names.
+These are best passed using ENVIRONMENT variables, both locally and especially for Kubernetes deployment.
 
-The `docker compose` has these defined in the `.env` file.
-
-When running in a production context such as K8s, the secrets are mapped to ENV variables at deployment of the container.
+The `docker compose` has these defined in the `.env` file.  For `k8s` this is part of the `Flink Job YAML spec`.
 
 This follows an immutable deployment model where configuration updates would entail new versions be deployed and aligns well with Kubernetes best practice.
 

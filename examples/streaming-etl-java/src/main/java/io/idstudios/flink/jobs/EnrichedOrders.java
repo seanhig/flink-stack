@@ -128,9 +128,10 @@ public class EnrichedOrders extends FlinkJob {
     String enrichedOrdersSql = String.format(enrichedTemplate,
         jobConfig.get("mysql.opsdb.host.name"),
         jobConfig.get("mysql.opsdb.db.port"),
+        jobConfig.get("mysql.opsdb.db.name"),
         jobConfig.get("mysql.opsdb.db.username"),
-        jobConfig.get("mysql.opsdb.db.password"),
-        jobConfig.get("mysql.opsdb.db.name"));
+        jobConfig.get("mysql.opsdb.db.password")
+        );
 
     tEnv.executeSql(productSql);
     tEnv.executeSql(orderSql);

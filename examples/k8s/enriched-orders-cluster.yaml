@@ -21,14 +21,17 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: enriched-orders-mysql-erpdb-password
+                  key: secret
             - name: MYSQL_OPSDB_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: enriched-orders-mysql-opsdb-password
+                  key: secret
             - name: POSTGRES_SHIPDB_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: enriched-orders-postgres-shipdb-password
+                  key: secret
   jobManager:
     resource:
       memory: "2048m"

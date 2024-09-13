@@ -22,8 +22,7 @@ public abstract class FlinkJob {
     try {
       FlinkJob.jobConfig = JobConfig.fromPropertiesFile(defaultConfigPath);
     } catch (Exception e) {
-      LOG.error("failure attempting to load enriched orders job config from " + defaultConfigPath);
-      LOG.error(e.getMessage(), e);
+      LOG.error("failure attempting to load enriched orders job config from " + defaultConfigPath, e);
       throw e;
     }
   }

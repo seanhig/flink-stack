@@ -49,12 +49,24 @@ Note that the JAR must be already `packaged` in the [streaming-etl-java](../stre
 Secrets are referenced in the `enriched-orders-cluster.yaml` job spec, and must be pre-defined in the cluster, as per:
 
 ```
-kubectl create secret generic enriched-orders-mysql-erpdb-password --from-literal=Fender2000
-kubectl create secret generic enriched-orders-postgres-shipdb-password --from-literal=Fender2000
-kubectl create secret generic enriched-orders-mysql-opsdb-password --from-literal=Fender2000
+kubectl create secret generic enriched-orders-mysql-erpdb-password --from-literal=secret=Fender2000
+kubectl create secret generic enriched-orders-postgres-shipdb-password --from-literal=secret=Fender2000
+kubectl create secret generic enriched-orders-mysql-opsdb-password --from-literal=secret=Fender2000
 ```
 
-The `enriched-orders-job.properties` file defines the runtime names of the mapped secret ENV variables which contain the injected secrets when the container is launched in k8s.
+The `enriched-orders-job.properties` file defines properties in the form of:
+
+```
+mysql.erpdb.db.password=secret
+```
+
+which can be overridden using ENVIRONMENT variables by converting the ENV name to uppercase and replacing the `.` with `_`. Eg.
+
+```
+MYSQL_ERPDB_DB_PASSWORD=secret
+```
+
+The ENV var will override any `.properties` file setting.  This is useful for managing Kubernetes Secrets in deployments, as demonstrated in the `enriched-orders-cluster.yaml`.
 
 Once the secrets have been defined the job image and spec can be deployed.
 
