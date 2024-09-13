@@ -70,10 +70,12 @@ Happy flinking!
 
 [streaming-etl-java](examples/streaming-etl-java/README.md) implementes the `Flink SQL` functionality in the `streaming-etl-to-iceberg` example using `Java` and the `Flink Table API`, and packages it into a job jar for deployment.
 
-[k8s](examples/k8s/README.md) illustrates how to deploy the `Flink Kubernetes Operator` to a K8s cluster and then how to define a Job `YAML` declaration file that will deploy the `streaming-etl-java job jar` into a dedicated job flink cluster running in the Kubernetes environment.
+[k8s](examples/k8s/README.md) illustrates how to deploy the `Flink Kubernetes Operator` to a K8s cluster and then how to define a Job `YAML` declaration file that will deploy the `streaming-etl-java job jar` into a dedicated job flink cluster running in the Kubernetes environment.  This example also defines a workable configuration and secrets handling strategy for production deployments.
+
+## Flink Workflow
+Starting with `Flink SQL` and the sql client to prototype data flows using agile SQL statements is a great way to setup the structure of a job in development.  Then transcribing that job into a `Java` implementation and `Job JAR` for deployment to Kubernetes feels like a great workflow and platform for data movement and real time analytics.
 
 ## Flink Catalogs
-
 The folks at decodable put out a lot of good info that has helped with navigating the Apache docs, or lack therof.  This is a great primer [article](https://www.decodable.co/blog/catalogs-in-flink-sql-a-primer) on `Flink Catalogs`.
 
 Essentially a catalog will persist your table definitions and source file locations (metadata) between sessions.  The `Flink SQL Client` by default will use an in-memory catalog that will disappear with each session.
