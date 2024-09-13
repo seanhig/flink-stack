@@ -28,29 +28,18 @@ public class JobConfig {
     return this.params.get(key);
   }
 
+  public ParameterTool getConfigParams() {
+    return this.config;
+  }
+
   public static JobConfig fromPropertiesFile(String filePath) throws IOException {
 
     JobConfig jobConfig = new JobConfig(filePath);
 
-    jobConfig.setEnvOverrideValue("mysql.erpdb.host.name");
-    jobConfig.setEnvOverrideValue("mysql.erpdb.db.name");
-    jobConfig.setEnvOverrideValue("mysql.erpdb.db.port");
-    jobConfig.setEnvOverrideValue("mysql.erpdb.db.user");
-    jobConfig.setEnvOverrideValue("mysql.erpdb.db.password");
-
-    jobConfig.setEnvOverrideValue("postgres.shipdb.host.name");
-    jobConfig.setEnvOverrideValue("postgres.shipdb.schema.name");
-    jobConfig.setEnvOverrideValue("postgres.shipdb.db.name");
-    jobConfig.setEnvOverrideValue("postgres.shipdb.db.port");
-    jobConfig.setEnvOverrideValue("postgres.shipdb.db.user");
-    jobConfig.setEnvOverrideValue("postgres.shipdb.db.password");
-    jobConfig.setEnvOverrideValue("postgres.shipdb.db.slotname");
-
-    jobConfig.setEnvOverrideValue("mysql.opsdb.host.name");
-    jobConfig.setEnvOverrideValue("mysql.opsdb.db.name");
-    jobConfig.setEnvOverrideValue("mysql.opsdb.db.port");
-    jobConfig.setEnvOverrideValue("mysql.opsdb.db.user");
-    jobConfig.setEnvOverrideValue("mysql.opsdb.db.password");
+    while(jobConfig.getConfigParams().getProperties().keys().asIterator().hasNext()) {
+      String propKey = (String) jobConfig.getConfigParams().getProperties().keys().asIterator().next();
+      jobConfig.setEnvOverrideValue(propKey);
+    }
 
     return jobConfig;
   }
