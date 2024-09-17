@@ -1,0 +1,19 @@
+operatorVolumeMounts:
+  create: true
+  data:
+    - name: flink-jobjars
+      mountPath: /flink-jobjars
+#    - name: flink-artifacts
+#      mountPath: /opt/flink/artifacts
+operatorVolumes:
+  create: true
+  data:
+    - name: flink-jobjars
+      hostPath:
+        path: /Users/seanhig/Workspace/flink-stack/examples/k8s/job-image
+        type: DirectoryOrCreate
+#    - name: flink-artifacts
+#      hostPath:
+#        path: /tmp/flink/artifacts
+#        type: DirectoryOrCreate
+

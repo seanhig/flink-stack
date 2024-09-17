@@ -1,7 +1,7 @@
 apiVersion: flink.apache.org/v1beta1
 kind: FlinkDeployment
 metadata:
-  name: enriched-orders-cluster
+  name: session-cluster
 spec:
   image: idstudios/flink-enriched-orders:1.20
   flinkVersion: v1_19
@@ -38,12 +38,20 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: enriched-orders-aws-access-key-id
-                  key: secret
+                  key: key
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: enriched-orders-aws-secret-access-key
-                  key: secret
+                  key: key
+          volumeMounts:
+            - mountPath: /flink-jobjars
+              name: flink-jobjars  
+      volumes:
+        - name: flink-jobjars
+          hostPath:
+            path: /Users/seanhig/Workspace/flink-stack/examples/k8s/job-image
+            type: DirectoryOrCreate                            
   jobManager:
     resource:
       memory: "2048m"
@@ -52,7 +60,4 @@ spec:
     resource:
       memory: "2048m"
       cpu: 1
-  job:
-    jarURI: local:///flink-jobjars/enriched-orders-jobs-1.0.0.jar
-    parallelism: 2
-    upgradeMode: stateless
+

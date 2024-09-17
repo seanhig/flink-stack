@@ -19,9 +19,16 @@ kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.
 ```
 
 Helm install of the `flink-kubernetes-operator`:
+
+Update the `helm-values.yaml` to reflect the full host path to the `./job-image` folder.  We use this as a local shared mapped folder containing the `job jar` in both the operator pod and the job cluster pod.
+
+Make sure to replace `/Users/seanhig/Workspace/flink-stack/examples/k8s/job-image` with the correct local path.
+
+> This also needs to be updated in the `session-cluster.yaml`.
+
 ```
 helm repo add flink-operator-repo https://downloads.apache.org/flink/flink-kubernetes-operator-1.9.0/
-helm install flink-kubernetes-operator flink-operator-repo/flink-kubernetes-operator
+helm install -f helm-values.yaml flink-kubernetes-operator flink-operator-repo/flink-kubernetes-operator
 ```
 
 ## Build the Enriched Orders Job Image
@@ -86,7 +93,7 @@ Note the `spec:image` setting uses our custom built job image so that the `job:j
 
 Once running we can port-forward to the new service:
 ```
-kubectl port-forward svc/enriched-orders-cluster-rest 8081
+kubectl port-forward svc/session-cluster-rest 8081
 ```
 
 Now we can open the browser to the dedicated [Job Manager UI](http://localhost:8081) and see our cluster with the running job.
