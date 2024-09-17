@@ -32,6 +32,18 @@ spec:
                 secretKeyRef:
                   name: enriched-orders-postgres-shipdb-password
                   key: secret
+            - name: AWS_REGION
+              value: us-west-2
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-aws-access-key-id
+                  key: secret
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-aws-secret-access-key
+                  key: secret
   jobManager:
     resource:
       memory: "2048m"

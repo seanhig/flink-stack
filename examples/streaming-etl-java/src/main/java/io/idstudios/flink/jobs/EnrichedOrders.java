@@ -17,7 +17,7 @@ public class EnrichedOrders extends FlinkJob {
 
   public static void main(String[] args) throws Exception {
 
-    loadJobConfig(EnrichedOrders.DEFAULT_CONFIG_PATH, args);
+    JobConfig jobConfig = loadJobConfig(EnrichedOrders.DEFAULT_CONFIG_PATH, args);
 
     Configuration config = new Configuration();
     config.set(PipelineOptions.NAME, "MySQL-enriched_orders-Java");

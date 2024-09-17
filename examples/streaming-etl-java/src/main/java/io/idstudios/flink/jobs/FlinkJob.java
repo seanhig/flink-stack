@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 
 public abstract class FlinkJob {
   private static final Logger LOG = LoggerFactory.getLogger(FlinkJob.class);
-  protected static JobConfig jobConfig = null;
 
-  public static void loadJobConfig(String defaultConfigPath, String[] args) throws IOException {
+  public static JobConfig loadJobConfig(String defaultConfigPath, String[] args) throws IOException {
     ParameterTool parameters = ParameterTool.fromArgs(args);
     if (parameters.has("config-filepath")) {
       defaultConfigPath = parameters.get("config-filepath");
@@ -20,7 +19,7 @@ public abstract class FlinkJob {
     }
 
     try {
-      FlinkJob.jobConfig = JobConfig.fromPropertiesFile(defaultConfigPath);
+      return JobConfig.fromPropertiesFile(defaultConfigPath);
     } catch (Exception e) {
       LOG.error("failure attempting to load enriched orders job config from " + defaultConfigPath, e);
       throw e;

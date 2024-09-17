@@ -49,9 +49,15 @@ Note that the JAR must be already `packaged` in the [streaming-etl-java](../stre
 Secrets are referenced in the `enriched-orders-cluster.yaml` job spec, and must be pre-defined in the cluster, as per:
 
 ```
+# Database credentials
 kubectl create secret generic enriched-orders-mysql-erpdb-password --from-literal=secret=Fender2000
 kubectl create secret generic enriched-orders-postgres-shipdb-password --from-literal=secret=Fender2000
 kubectl create secret generic enriched-orders-mysql-opsdb-password --from-literal=secret=Fender2000
+
+# AWS credentials
+kubectl create secret generic enriched-orders-aws-access-key-id --from-literal=key=XXX
+kubectl create secret generic enriched-orders-aws-secret-access-key --from-literal=key=XXX
+
 ```
 
 The `enriched-orders-job.properties` file defines properties in the form of:
