@@ -18,7 +18,7 @@ This maven project implements the [Flink SQL Streaming ETL to Iceberg](../stream
 mvn clean compile package
 ```
 
-This will produce the `enriched-orders-job-1.0.0.jar` in the `target` folder.
+This will produce the `enriched-orders-jobs-1.0.0.jar` in the `target` folder.
 
 This `job jar` can be uploaded to the `flink-stack` via the `Subnit New Job` feature of the  [Job Manager UI](http://localhost:8081).  Once the jar is uploaded, the `Enriched Orders` job can be `Submitted`.
 
@@ -36,7 +36,7 @@ The [JobConfig](src/main/java/io/idstudios/flink/jobs/JobConfig.java) class impl
 
 ```
 
-The `enriched-orders-job.properties` file is bundled into the custom `Flink` docker container for k8s operator deployment, but secret values are then overriden by ENVIRONMENT variables.  
+The `enriched-orders-jobs.properties` file is bundled into the custom `Flink` docker container for k8s operator deployment, but secret values are then overriden by ENVIRONMENT variables.  
 
 > Note: The default location of the `.properties` file is set to the k8s job-image location.  When running in `docker-compose` manually submitted jobs can override this location with a [program argument](#manual-deployment-config-path)
 
@@ -51,7 +51,7 @@ This follows an immutable deployment model where configuration updates would ent
 When manually pushing the `job jar` up to the local `flink-stack` docker compose environment, which is handy for testing and development, pass the following parameter as the `program arguments`:
 
 ```
---config-filepath /host/examples/k8s/job-image/enriched-orders-job.properties
+--config-filepath /host/examples/k8s/job-image/enriched-orders-jobs.properties
 ```
 
 > This references the same properties file used for k8s, as the host is a mapped folder on the docker compose image instance for flink task manager and job manager.

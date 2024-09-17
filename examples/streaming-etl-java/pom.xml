@@ -21,7 +21,7 @@ under the License.
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.apache.flink</groupId>
-	<artifactId>enriched-orders-job</artifactId>
+	<artifactId>enriched-orders-jobs</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 

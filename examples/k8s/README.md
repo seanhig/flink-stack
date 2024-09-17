@@ -25,7 +25,7 @@ helm install flink-kubernetes-operator flink-operator-repo/flink-kubernetes-oper
 ```
 
 ## Build the Enriched Orders Job Image
-Next we build an immutable Flink container containing the `enriched-orders-job-1.0.0.jar` job jar:
+Next we build an immutable Flink container containing the `enriched-orders-jobs-1.0.0.jar` job jar:
 
 ```
 build-job-image.sh
@@ -34,7 +34,7 @@ build-job-image.sh
 or 
 
 ```
-cp ../streaming-etl-java/target/enriched-orders-job-1.0.0.jar ./job-image
+cp ../streaming-etl-java/target/enriched-orders-jobs-1.0.0.jar ./job-image
 docker build -t idstudios/flink-enriched-orders:1.20 ./job-image
 ```
 
@@ -60,7 +60,7 @@ kubectl create secret generic enriched-orders-aws-secret-access-key --from-liter
 
 ```
 
-The `enriched-orders-job.properties` file defines properties in the form of:
+The `enriched-orders-jobs.properties` file defines properties in the form of:
 
 ```
 mysql.erpdb.db.password=secret
@@ -77,7 +77,7 @@ The ENV var will override any `.properties` file setting.  This is useful for ma
 Once the secrets have been defined the job image and spec can be deployed.
 
 ## Deploy Enriched Orders Job Image
-Next we deploy the `enriched-orders-job-1.0.0.jar` via the `idstudios/flink-enriched-orders:1.20` docker image to a new dedicated Flink cluster deployment in K8s.
+Next we deploy the `enriched-orders-jobs-1.0.0.jar` via the `idstudios/flink-enriched-orders:1.20` docker image to a new dedicated Flink cluster deployment in K8s.
 ```
 kubectl create -f enriched-orders-cluster.yaml
 ```
