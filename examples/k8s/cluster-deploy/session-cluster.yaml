@@ -1,0 +1,123 @@
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
+metadata:
+  name: session-cluster
+spec:
+  image: idstudios/flink-enriched-orders:1.20
+  flinkVersion: v1_19
+  ingress:
+    template: "/{{namespace}}/{{name}}(/|$)(.*)"
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+  flinkConfiguration:
+    taskmanager.numberOfTaskSlots: "5"
+    high-availability: org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory
+    high-availability.storageDir: file:///opt/flink/ha_data/flink-ha
+    state.checkpoints.dir: file:///opt/flink/ha_data/flink-cp
+    state.savepoints.dir: file:///opt/flink/ha_data/flink-sp
+    kubernetes.operator.snapshot.resource.enabled: "false"
+  serviceAccount: flink
+  podTemplate:
+    spec:
+      containers:
+        # Do not change the main container name
+        - name: flink-main-container
+          # values in enriched-orders-jobs.properties can be overridden
+          # as ENV variables, which will take precedence
+          # K8s SECRETS can be used for sensitive data such as passwords
+          env:
+            - name: MYSQL_ERPDB_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-mysql-erpdb-password
+                  key: secret
+            - name: MYSQL_OPSDB_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-mysql-opsdb-password
+                  key: secret
+            - name: POSTGRES_SHIPDB_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-postgres-shipdb-password
+                  key: secret
+            - name: AWS_REGION
+              value: us-west-2
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-aws-access-key-id
+                  key: key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: enriched-orders-aws-secret-access-key
+                  key: key
+          volumeMounts:
+#              - mountPath: /flink-jobjars
+#                name: flink-jobjars
+            - name: flink-volume
+              mountPath: /opt/flink/ha_data
+            - name: flink-job-configs
+              mountPath: "/flink-job-configs/enriched-orders-jobs.properties"
+              subPath: "enriched-orders-jobs.properties"              
+      volumes:
+#         - name: flink-jobjars
+#            hostPath:
+#              path: /Users/seanhig/Workspace/flink-stack/examples/k8s/ha_data
+#              type: DirectoryOrCreate
+        - name: flink-job-configs
+          configMap:
+            name: enriched-orders-configmap
+            items:
+              - key: "enriched-orders-jobs.properties"
+                path: "enriched-orders-jobs.properties"
+        - name: flink-volume
+          persistentVolumeClaim:
+            claimName: session-cluster-ha-data-pvc
+  jobManager:
+    resource:
+      memory: "2048m"
+      cpu: 1
+  taskManager:
+    resource:
+      memory: "2048m"
+      cpu: 1
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: session-cluster-ha-data-pv
+spec:
+  storageClassName: docker-sc
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/Users/seanhig/Workspace/flink-stack/examples/k8s/ha_data"
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: session-cluster-ha-data-pvc
+spec:
+  storageClassName: docker-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "true"
+  labels:
+    app.kubernetes.io/component: controller
+  name: nginx
+spec:
+  controller: k8s.io/ingress-nginx

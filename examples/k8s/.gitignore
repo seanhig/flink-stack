@@ -1,1 +1,3 @@
 *.jar
+ha_data/** 
+!ha_data/README.md

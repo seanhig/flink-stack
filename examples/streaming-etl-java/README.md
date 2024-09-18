@@ -51,7 +51,7 @@ This follows an immutable deployment model where configuration updates would ent
 When manually pushing the `job jar` up to the local `flink-stack` docker compose environment, which is handy for testing and development, pass the following parameter as the `program arguments`:
 
 ```
---config-filepath /host/examples/k8s/job-image/enriched-orders-jobs.properties
+--config-filepath /host/examples/k8s/job-jar-image/enriched-orders-jobs.properties
 ```
 
 > This references the same properties file used for k8s, as the host is a mapped folder on the docker compose image instance for flink task manager and job manager.

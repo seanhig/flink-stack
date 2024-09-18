@@ -5,7 +5,7 @@ metadata:
 spec:
   deploymentName: session-cluster
   job:
-    jarURI: file:///flink-jobjars/enriched-orders-jobs-1.0.0.jar
+    jarURI: http://flink-jobjar-service/flink-jobjars/enriched-orders-jobs-1.0.0.jar
     entryClass: io.idstudios.flink.jobs.EnrichedOrders
     parallelism: 2
     upgradeMode: stateless
@@ -17,7 +17,7 @@ metadata:
 spec:
   deploymentName: session-cluster
   job:
-    jarURI: file:///flink-jobjars/enriched-orders-jobs-1.0.0.jar
+    jarURI: http://flink-jobjar-service/flink-jobjars/enriched-orders-jobs-1.0.0.jar
     entryClass: io.idstudios.flink.jobs.EnrichedOrdersIceberg
     parallelism: 2
     upgradeMode: stateless

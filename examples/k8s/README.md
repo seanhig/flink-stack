@@ -107,3 +107,10 @@ In the odd use case where you need to replace the `flink-operator` image, this i
 helm repo add flink-operator-repo https://downloads.apache.org/flink/flink-kubernetes-operator-1.9.0/
 helm install --set image.repository=idstudios/flink-kubernetes-operator --set image.tag=latest flink-kubernetes-operator flink-operator-repo/flink-kubernetes-operator
 ```
+
+### Useful Helm Commands
+```
+helm install -f etc/helm-values.yaml flink-kubernetes-operator flink-operator-repo/flink-kubernetes-operator --dry-run --debug > output.txt
+
+helm install flink-kubernetes-operator flink-operator-repo/flink-kubernetes-operator --dry-run --debug > output.txt
+```

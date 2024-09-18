@@ -13,7 +13,7 @@ import static org.apache.flink.table.api.Expressions.*;
 public class EnrichedOrders extends FlinkJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(EnrichedOrders.class);
-    private static final String DEFAULT_CONFIG_PATH = "/flink-jobjars/enriched-orders-jobs.properties";
+    private static final String DEFAULT_CONFIG_PATH = "/flink-job-configs/enriched-orders-jobs.properties";
 
     public static void main(String[] args) throws Exception {
 
