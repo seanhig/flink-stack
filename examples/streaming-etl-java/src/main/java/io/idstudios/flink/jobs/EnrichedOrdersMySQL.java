@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import static org.apache.flink.table.api.Expressions.*;
 
-public class EnrichedOrders extends FlinkJob {
+public class EnrichedOrdersMySQL extends FlinkJob {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EnrichedOrders.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EnrichedOrdersMySQL.class);
     private static final String DEFAULT_CONFIG_PATH = "/flink-job-configs/enriched-orders-jobs.properties";
 
     public static void main(String[] args) throws Exception {
 
-        JobConfig jobConfig = loadJobConfig(EnrichedOrders.DEFAULT_CONFIG_PATH, args);
+        JobConfig jobConfig = loadJobConfig(EnrichedOrdersMySQL.DEFAULT_CONFIG_PATH, args);
 
         configureEnrichedOrdersJob(jobConfig);
     }

@@ -65,7 +65,7 @@ The `idstudios/flink-jobjars:1.1` docker image now contains our job jar served u
 
 > It makes sense to seperate the `Job Jars` from the deployed container image.  If we handled deployments with an entire image, all jobs would be affected.  The `Session Cluster` job image only contains the required dependencies for our target jobs, but the jobs themselves are free to evolve and be re-deployed independently as per the `FlinkSessionJob` configuration yaml and the `jobURI`.
 
-## Secrets
+## Configure K8s Secrets
 Secrets are referenced in the [session-cluster.yaml](./cluster-deploy/session-cluster.yaml) job spec, and must be pre-defined in the cluster, as per:
 
 ```
@@ -94,7 +94,7 @@ MYSQL_ERPDB_DB_PASSWORD=secret
 
 The ENV var will override any `.properties` file setting.  This is useful for managing Kubernetes Secrets in deployments, as demonstrated in the `enriched-orders-cluster.yaml`.
 
-## Kubernetes ConfigMap
+## Configure Kubernetes ConfigMap for Properties
 The `enriched-orders-jobs.properties` file is defined in a `K8s ConfigMap` and mapped into the target job image pod at a default location where the `Java Job Jar` expects to find it.
 
 ## Deploy Enriched Orders Session Cluster
@@ -113,7 +113,7 @@ Once running we can port-forward to the new service:
 kubectl port-forward svc/session-cluster-rest 8081
 ```
 
-Now we can open the browser to the dedicated [Job Manager UI](http://localhost:8081) and see our cluster.  At this point there should be no running jobs.
+Now we can open the browser to the dedicated [Job Manager UI](http://localhost:8081) and see our cluster.  At this point there should be __NO RUNNING JOBS__.
 
 ```
 kubectl get pods
@@ -135,9 +135,11 @@ With the `Session Cluster` deployed and running, we can deploy the flink jobs:
 kubectl apply -f flink-jobs.yaml
 ```
 
-The browser console should show the two jobs running.
+The browser console should now show our two jobs running.
 
-#### Using a custom built flink-kubernetes-operator image
+> __Note:__ that the jobs are submitted as K8s CRDs and are listed and managed via `kubectl`.  There is no way to cancel or remove the jobs from within the `Flink Dashboard UI`, it can only be used to view and monitor the jobs.
+
+### Using a custom built flink-kubernetes-operator image
 In the odd use case where you need to replace the `flink-operator` image, this is also doable - but the documentation has a few errors and isn't entirely clear on the purpose.  Experimentation revealed it had no affect on the profile of the launched instances and for this we needed a job image as above.
 
 > Note current docs have the 2nd command quite wrong, below is the working version:

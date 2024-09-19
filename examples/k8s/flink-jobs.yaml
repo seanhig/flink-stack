@@ -6,7 +6,7 @@ spec:
   deploymentName: session-cluster
   job:
     jarURI: http://flink-jobjar-service/flink-jobjars/enriched-orders-jobs-1.0.0.jar
-    entryClass: io.idstudios.flink.jobs.EnrichedOrders
+    entryClass: io.idstudios.flink.jobs.EnrichedOrdersMySQL
     parallelism: 2
     upgradeMode: stateless
 ---
