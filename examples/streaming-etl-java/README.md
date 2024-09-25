@@ -31,7 +31,7 @@ mvn clean compile package
 
 This will produce the `enriched-orders-jobs-1.0.0.jar` in the `target` folder.
 
-This `job jar` can be uploaded to the `flink-stack` via the `Subnit New Job` feature of the  [Job Manager UI](http://localhost:8081).  Once the jar is uploaded, the `Enriched Orders All` job can be `Submitted`.  This will load all of the EnrichedOrders jobs.
+This `job jar` can be uploaded to the `flink-stack` via the `Subnit New Job` feature of the  [Job Manager UI](http://localhost:8088).  Once the jar is uploaded, the `Enriched Orders All` job can be `Submitted`.  This will load all of the EnrichedOrders jobs.
 
 ## Job Configuration and Secrets
 The ideal operating environment would be Flink on K8s using the operator.  In this environment it is common to use ENV vars for configuration items, but that wouldn't suit the development model in Flink.

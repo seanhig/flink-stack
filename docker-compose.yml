@@ -32,7 +32,7 @@ services:
     build: ./docker-images/flink
     restart: always
     ports:
-      - 8081:8081
+      - 8088:8081
       - 6123:6123
     command: 
       - /bin/sh
@@ -92,8 +92,8 @@ services:
     container_name: zk
     hostname: zk
     ports:
-      - 2181:2181
-      - 7001:7000
+      - 2182:2181
+      - 7002:7000
     volumes:
       - zookeeper_log-volume:/logs
       - zookeeper_data-volume:/data
@@ -108,7 +108,7 @@ services:
           - "node.role == manager"
     environment:
       ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zk:2888:3888;2181 
+      ZOO_SERVERS: server.1=zk:2888:3888;2182 
       ZOO_4LW_COMMANDS_WHITELIST: mntr, conf, ruok
 
   minio:

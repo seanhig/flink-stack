@@ -35,7 +35,7 @@ state.checkpoints.dir: file:///data/rocksdb/checkpoint
 state.backend.rocksdb.localdir: file:///data/rocksdb/data
 state.backend.incremental: true
 high-availability.type: zookeeper
-high-availability.zookeeper.quorum: zk:2181
+high-availability.zookeeper.quorum: zk:2182
 high-availability.zookeeper.path.root: /flink
 high-availability.cluster-id: /cluster_one
 high-availability.storageDir: file:///data/recovery    

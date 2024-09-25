@@ -227,7 +227,7 @@ The `insert statement` above will return:
 Job ID: 51624193b43424c4ad780bc2a3dbcf16
 ```
 
-Open the `localhost:8081` Flink management site and look under `Jobs/Running Jobs` and observe the `MySQL-enriched_orders` job.
+Open the `localhost:8088` Flink management site and look under `Jobs/Running Jobs` and observe the `MySQL-enriched_orders` job.
 
 ![Flink Running Job](images/flink-running-sql-job.jpg)
 

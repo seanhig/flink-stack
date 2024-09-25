@@ -22,11 +22,11 @@ under the License.
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.idstudios.flink.jobs</groupId>
-  <artifactId>weborders-jobs</artifactId>
+  <artifactId>weborder-jobs</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
 
-  <name>Kafka Web Orders Flink Jobs</name>
+  <name>Kafka Web Order Flink Jobs</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,6 +41,10 @@ under the License.
   </properties>
 
   <repositories>
+    <repository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </repository>
     <repository>
       <id>apache.snapshots</id>
       <name>Apache Development Snapshot Repository</name>
@@ -97,6 +101,34 @@ under the License.
       <artifactId>flink-clients</artifactId>
       <version>${flink.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-avro -->
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-avro</artifactId>
+      <version>1.20.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka -->
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-kafka</artifactId>
+      <version>3.2.0-1.19</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>3.8.0</version>
+    </dependency>
+
+<!-- https://mvnrepository.com/artifact/io.confluent/kafka-avro-serializer -->
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-avro-serializer</artifactId>
+      <version>7.7.1</version>
     </dependency>
 
     <dependency>
