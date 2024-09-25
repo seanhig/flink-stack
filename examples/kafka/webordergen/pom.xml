@@ -66,6 +66,12 @@
 			<version>1.9.0</version>
 		</dependency>
 
+    <!-- Shared model lib -->
+    <dependency>
+      <groupId>io.idstudios.flink.models</groupId>
+      <artifactId>weborder-model</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -88,24 +94,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.avro</groupId>
-				<artifactId>avro-maven-plugin</artifactId>
-				<version>1.12.0</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>schema</goal>
-						</goals>
-						<configuration>
-							<sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
-							<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
-							<stringType>String</stringType>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

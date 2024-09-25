@@ -7,19 +7,21 @@ SET 'sql-client.verbose' = 'true';
 -- Iceberg CDC Source table
 
 CREATE TABLE enriched_orders_cdc (
-   order_id INT,
-   order_date TIMESTAMP(3),
-   customer_name STRING,
-   price DECIMAL(10, 5),
-   product_id INT,
-   order_status BOOLEAN,
-   product_name STRING,
-   product_description STRING,
-   shipment_id INT,
-   origin STRING,
-   destination STRING,
-   is_arrived BOOLEAN,
-   PRIMARY KEY (order_id) NOT ENFORCED ) 
+    order_id INT,
+    order_date TIMESTAMP(3),
+    customer_name STRING,
+    order_total DECIMAL(10, 5) ,
+    order_qty INTEGER,
+    product_id INTEGER,
+    order_status INTEGER, 
+    product_name STRING,
+    product_description STRING,
+    product_price DECIMAL(10, 5),
+    shipment_id INTEGER,
+    origin STRING,
+    destination STRING,
+    has_arrived BOOLEAN
+    PRIMARY KEY (order_id) NOT ENFORCED ) 
    WITH (
    'connector' = 'mysql-cdc',
    'hostname' = 'host.docker.internal',
@@ -47,18 +49,20 @@ CREATE DATABASE iceberg_orders;
 USE iceberg_orders;
 
 CREATE TABLE enriched_orders_lake (
-   order_id INT,
-   order_date TIMESTAMP,
-   customer_name STRING,
-   price DECIMAL(10, 5),
-   product_id INT,
-   order_status BOOLEAN,
-   product_name STRING,
-   product_description STRING,
-   shipment_id INT,
-   origin STRING,
-   destination STRING,
-   is_arrived BOOLEAN,
+    order_id INT,
+    order_date TIMESTAMP(3),
+    customer_name STRING,
+    order_total DECIMAL(10, 5) ,
+    product_id INTEGER,
+    shipment_id INTEGER,
+    origin STRING,
+    order_status INTEGER, 
+    product_name STRING,
+    product_price DECIMAL(10, 5),
+    order_qty INTEGER,
+    product_description STRING,
+    destination STRING,
+    has_arrived BOOLEAN
    PRIMARY KEY (order_id) NOT ENFORCED ) ;
    
 SET 'pipeline.name' = 'Iceberg-enriched-orders-aws';

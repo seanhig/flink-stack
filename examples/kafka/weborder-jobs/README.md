@@ -1,6 +1,6 @@
 # Streaming ETL Example in Java
 
-This maven project implements the [Flink SQL Streaming ETL to Iceberg](../streaming-etl-to-iceberg/) example using the Java based `Table API`.  See the [EnrichedOrdersMySQL](enriched-orders-jobs/src/main/java/io/idstudios/flink/jobs/EnrichedOrdersMySQL.java) and [EnrichedOrdersIceberg](enriched-orders-jobs/src/main/java/io/idstudios/flink/jobs/EnrichedOrdersIceberg.java) classes for details.
+This maven project implements the [Flink SQL Streaming ETL to Iceberg](../streaming-etl-to-iceberg/) example using the Java based `Table API`.  See the [EnrichedOrdersMySQL](src/main/java/io/idstudios/flink/jobs/EnrichedOrdersMySQL.java) and [EnrichedOrdersIceberg](src/main/java/io/idstudios/flink/jobs/EnrichedOrdersIceberg.java) classes for details.
 
 ## Requirements
 
@@ -12,20 +12,9 @@ This maven project implements the [Flink SQL Streaming ETL to Iceberg](../stream
 
 > __Note:__ although it is required to have the [streaming-etl-to-iceberg](../streaming-etl-to-iceberg/) tables in place, the `Flink Jobs` themselves should not be running (cancelled).
 
-## Flink Job Common
-Before building the job jar there is a shared common library called `flink-job-common` used by other example jobs.  This must be built and installed into the local maven repo:
-
-```
-cd flink-job-common
-mvn clean install
-```
-
-This is then referenced as a dependency and bundled into the `maven shaded` Uber jar for the job deployments.
-
 ## Building the Flink Job Jar
 
 ```
-cd enriched-orders-jobs
 mvn clean compile package
 ```
 
@@ -38,7 +27,7 @@ The ideal operating environment would be Flink on K8s using the operator.  In th
 
 After some consideration Java `.properties` files seemed to be the best option.  However the values in the `.properties` file can be overridden by ENVIRONMENT variables at runtime.
 
-The [JobConfig](enriched-orders-jobs/src/main/java/io/idstudios/flink/jobs/JobConfig.java) class implements this override using the following formula:
+The [JobConfig](src/main/java/io/idstudios/flink/jobs/JobConfig.java) class implements this override using the following formula:
 
 ```
     String envKey = key.replace(".", "_").toUpperCase();

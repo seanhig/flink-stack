@@ -1,0 +1,12 @@
+{"namespace": "io.idstudios.flink.models",
+ "type": "record",
+ "name": "WebOrder",
+ "fields": [
+     {"name": "web_order_id",  "type": "string" },
+     {"name": "order_date",  "type": "long" },
+     {"name": "customer_name", "type": "string"},
+     {"name": "destination", "type": "string"},
+     {"name": "product_id",  "type": "int" },
+     {"name": "quantity",  "type": "int"}
+ ]
+}

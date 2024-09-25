@@ -17,40 +17,42 @@ MySQL hosts the `erpdb` database which contains the `products` and `orders` sour
 Run the `erpdb.sql` script in MySQL.
 
 ```
--- MySQL
+-- MySQL source
+SET GLOBAL binlog_format = 'ROW';
 CREATE DATABASE erpdb;
 USE erpdb;
 CREATE TABLE products (
   id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  description VARCHAR(512)
-);
-ALTER TABLE products AUTO_INCREMENT = 101;
+  description VARCHAR(512),
+  price  DECIMAL(10, 5) NOT NULL
+) AUTO_INCREMENT = 101;
 
 INSERT INTO products
-VALUES (default,"scooter","Small 2-wheel scooter"),
-       (default,"car battery","12V car battery"),
-       (default,"12-pack drill bits","12-pack of drill bits with sizes ranging from #40 to #3"),
-       (default,"hammer","12oz carpenter's hammer"),
-       (default,"hammer","14oz carpenter's hammer"),
-       (default,"hammer","16oz carpenter's hammer"),
-       (default,"rocks","box of assorted rocks"),
-       (default,"jacket","water resistent black wind breaker"),
-       (default,"spare tire","24 inch spare tire");
+VALUES (default,"scooter","Small 2-wheel scooter", 107.00),
+       (default,"car battery","12V car battery", 85.99),
+       (default,"12-pack drill bits","12-pack of drill bits with sizes ranging from #40 to #3", 35.99),
+       (default,"hammer","12oz carpenter's hammer", 12.50),
+       (default,"hammer","14oz carpenter's hammer", 13.50),
+       (default,"hammer","16oz carpenter's hammer", 15.25),
+       (default,"rocks","box of assorted rocks", 4.99),
+       (default,"jacket","water resistent black wind breaker", 24.99),
+       (default,"spare tire","24 inch spare tire", 115.0);
 
 CREATE TABLE orders (
   order_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   order_date DATETIME NOT NULL,
   customer_name VARCHAR(255) NOT NULL,
-  price DECIMAL(10, 5) NOT NULL,
+  order_total DECIMAL(10, 5) NOT NULL,
+  qty INTEGER NOT NULL,
   product_id INTEGER NOT NULL,
-  order_status BOOLEAN NOT NULL -- Whether order has been placed
+  order_status INTEGER NOT NULL 
 ) AUTO_INCREMENT = 10001;
 
 INSERT INTO orders
-VALUES (default, '2020-07-30 10:08:22', 'Jark', 50.50, 102, false),
-       (default, '2020-07-30 10:11:09', 'Sally', 15.00, 105, false),
-       (default, '2020-07-30 12:00:30', 'Edward', 25.25, 106, false);
+VALUES (default, '2020-07-30 10:08:22', 'Jark', 85.99, 1, 102, 0),
+       (default, '2020-07-30 10:11:09', 'Sally', 13.50, 1, 105, 0),
+       (default, '2020-07-30 12:00:30', 'Edward', 15.25, 1, 106, 0);
 ```
 
 MySQL also doubles as a `target` or `sink` with the database `operations`, which contains the output table `enriched_orders`, which is the result of a `Flink SQL` insert statement job.
@@ -58,23 +60,27 @@ MySQL also doubles as a `target` or `sink` with the database `operations`, which
 Run the `operations.sql` script in MySQL also.
 
 ```
-CREATE DATABASE operational_datastore;
-USE operational_datastore;
+-- MySQL target 
+CREATE DATABASE operations;
+USE operations;
 
 CREATE TABLE enriched_orders (
   order_id INTEGER NOT NULL PRIMARY KEY,
   order_date TIMESTAMP NOT NULL,
   customer_name VARCHAR(255) ,
-  price DECIMAL(10, 5) ,
+  order_total DECIMAL(10, 5) ,
   product_id INTEGER NOT NULL,
   shipment_id INTEGER,
   origin VARCHAR(255),
-  order_status BOOLEAN, -- Whether order has been placed
+  order_status INTEGER, 
   product_name VARCHAR(255),
+  product_price DECIMAL(10, 5),
+  order_qty INTEGER,
   product_description VARCHAR(512),
   destination VARCHAR(255),
-  is_arrived BOOLEAN
+  has_arrived BOOLEAN
 );
+
 
 ```
 
@@ -85,20 +91,19 @@ Run the `shipdb.sql` script in PostgreSQL
 
 ```
 -- PostgreSQL source
-
 CREATE TABLE shipments (
   shipment_id SERIAL NOT NULL PRIMARY KEY,
   order_id SERIAL NOT NULL,
   origin VARCHAR(255) NOT NULL,
   destination VARCHAR(255) NOT NULL,
-  is_arrived BOOLEAN NOT NULL
+  has_arrived BOOLEAN NOT NULL
 );
 ALTER SEQUENCE public.shipments_shipment_id_seq RESTART WITH 1001;
 ALTER TABLE public.shipments REPLICA IDENTITY FULL;
 INSERT INTO shipments
-VALUES (default,10001,'Beijing','Shanghai',false),
-       (default,10002,'Hangzhou','Shanghai',false),
-       (default,10003,'Shanghai','Hangzhou',false);
+VALUES (default,10001,'Warehouse A','Shanghai',false),
+       (default,10002,'Warehouse B','Shanghai',false),
+       (default,10003,'Warehouse A','Hangzhou',false);
 ```
 
 ## Flink-SQL for MySQL, Postgres CDC to MySQL Summary Table (enriched_orders)
@@ -118,8 +123,10 @@ CREATE TABLE products (
     id INT,
     name STRING,
     description STRING,
+    product_price DECIMAL(10, 5),
     PRIMARY KEY (id) NOT ENFORCED
-  ) WITH (
+)
+WITH (
     'connector' = 'mysql-cdc',
     'hostname' = 'host.docker.internal',
     'port' = '3306',
@@ -127,92 +134,94 @@ CREATE TABLE products (
     'password' = 'Fender2000',
     'database-name' = 'erpdb',
     'table-name' = 'products'
-  );
+);
 
 CREATE TABLE orders (
-   order_id INT,
-   order_date TIMESTAMP(0),
-   customer_name STRING,
-   price DECIMAL(10, 5),
-   product_id INT,
-   order_status BOOLEAN,
-   PRIMARY KEY (order_id) NOT ENFORCED
- ) WITH (
-   'connector' = 'mysql-cdc',
-   'hostname' = 'host.docker.internal',
-   'port' = '3306',
-   'username' = 'root',
-   'password' = 'Fender2000',
-   'database-name' = 'erpdb',
-   'table-name' = 'orders'
- );
+    order_id INT,
+    order_date TIMESTAMP(0),
+    customer_name STRING,
+    order_total DECIMAL(10, 5),
+    order_qty INTEGER,
+    product_id INT,
+    order_status INTEGER,
+    PRIMARY KEY (order_id) NOT ENFORCED
+)
+WITH (
+    'connector' = 'mysql-cdc',
+    'hostname' = 'host.docker.internal',
+    'port' = '3306',
+    'username' = 'root',
+    'password' = 'Fender2000',
+    'database-name' = 'erpdb',
+    'table-name' = 'orders'
+);
 
 -- Flink SQL to define shipments from PostgreSQL shipdb
 CREATE TABLE shipments (
-   shipment_id INT,
-   order_id INT,
-   origin STRING,
-   destination STRING,
-   is_arrived BOOLEAN,
-   PRIMARY KEY (shipment_id) NOT ENFORCED
- ) WITH (
-   'connector' = 'postgres-cdc',
-   'hostname' = 'host.docker.internal',
-   'port' = '5432',
-   'username' = 'postgres',
-   'password' = 'Fender2000',
-   'database-name' = 'shipdb',
-   'schema-name' = 'public',
-   'table-name' = 'shipments',
-   'decoding.plugin.name' = 'pgoutput',
-   'slot.name' = 'flink'
- );
+    shipment_id INT,
+    order_id INT,
+    origin STRING,
+    destination STRING,
+    has_arrived BOOLEAN,
+    PRIMARY KEY (shipment_id) NOT ENFORCED
+)
+WITH (
+    'connector' = 'postgres-cdc',
+    'hostname' = 'host.docker.internal',
+    'port' = '5432',
+    'username' = 'postgres',
+    'password' = 'Fender2000',
+    'database-name' = 'shipdb',
+    'schema-name' = 'public',
+    'table-name' = 'shipments',
+    'decoding.plugin.name' = 'pgoutput',
+    'slot.name' = 'flink'
+);
 
 
  -- Flink SQL to define the target enriched_orders table in the MySQL operational_datastore
 CREATE TABLE enriched_orders (
-   order_id INT,
-   order_date TIMESTAMP(3),
-   customer_name STRING,
-   price DECIMAL(10, 5),
-   product_id INT,
-   order_status BOOLEAN,
-   product_name STRING,
-   product_description STRING,
-   shipment_id INT,
-   origin STRING,
-   destination STRING,
-   is_arrived BOOLEAN,
-   PRIMARY KEY (order_id) NOT ENFORCED
-  ) WITH (
+    order_id INT,
+    order_date TIMESTAMP(3),
+    customer_name STRING,
+    order_total DECIMAL(10, 5) ,
+    order_qty INTEGER,
+    product_id INTEGER,
+    order_status INTEGER, 
+    product_name STRING,
+    product_description STRING,
+    product_price DECIMAL(10, 5),
+    shipment_id INTEGER,
+    origin STRING,
+    destination STRING,
+    has_arrived BOOLEAN
+    PRIMARY KEY (order_id) NOT ENFORCED
+)
+WITH (
     'connector.type' = 'jdbc',
     'connector.url' = 'jdbc:mysql://host.docker.internal:3306/operations',
     'connector.username' = 'root',
     'connector.password' = 'Fender2000',
     'connector.table' = 'enriched_orders'
-  );
+);
 
 -- Sets the job name for the any SQL that follows
 SET 'pipeline.name' = 'MySQL-enriched_orders';
 
 -- Creates a streaming ETL job to provide real-time updates to the enriched_orders table
-INSERT INTO enriched_orders
- SELECT o.*, p.name, p.description, s.shipment_id, s.origin, s.destination, s.is_arrived
- FROM orders AS o
- LEFT JOIN products AS p ON o.product_id = p.id
- LEFT JOIN shipments AS s ON o.order_id = s.order_id;
+INSERT INTO
+    enriched_orders
+SELECT o.*, p.name, p.description, p.price, s.shipment_id, s.origin, s.destination, s.is_arrived
+FROM
+    orders AS o
+    LEFT JOIN products AS p ON o.product_id = p.id
+    LEFT JOIN shipments AS s ON o.order_id = s.order_id;
 
 ```
 
 The `insert statement` above will return:
 
 ```
-Flink SQL> INSERT INTO enriched_orders
->  SELECT o.*, p.name, p.description, s.shipment_id, s.origin, s.destination, s.is_arrived
->  FROM orders AS o
->  LEFT JOIN products AS p ON o.product_id = p.id
->  LEFT JOIN shipments AS s ON o.order_id = s.order_id;
-> 
 [INFO] Submitting SQL update statement to the cluster...
 [INFO] SQL update statement has been successfully submitted to the cluster:
 Job ID: 51624193b43424c4ad780bc2a3dbcf16
@@ -267,19 +276,21 @@ SET 'sql-client.verbose' = 'true';
 -- Iceberg CDC Source table
 
 CREATE TABLE enriched_orders_cdc (
-   order_id INT,
-   order_date TIMESTAMP(3),
-   customer_name STRING,
-   price DECIMAL(10, 5),
-   product_id INT,
-   order_status BOOLEAN,
-   product_name STRING,
-   product_description STRING,
-   shipment_id INT,
-   origin STRING,
-   destination STRING,
-   is_arrived BOOLEAN,
-   PRIMARY KEY (order_id) NOT ENFORCED ) 
+    order_id INT,
+    order_date TIMESTAMP(3),
+    customer_name STRING,
+    order_total DECIMAL(10, 5) ,
+    order_qty INTEGER,
+    product_id INTEGER,
+    order_status INTEGER, 
+    product_name STRING,
+    product_description STRING,
+    product_price DECIMAL(10, 5),
+    shipment_id INTEGER,
+    origin STRING,
+    destination STRING,
+    has_arrived BOOLEAN
+    PRIMARY KEY (order_id) NOT ENFORCED ) 
    WITH (
    'connector' = 'mysql-cdc',
    'hostname' = 'host.docker.internal',
@@ -305,18 +316,20 @@ CREATE DATABASE iceberg_orders;
 USE iceberg_orders;
 
 CREATE TABLE enriched_orders_lake (
-   order_id INT,
-   order_date TIMESTAMP,
-   customer_name STRING,
-   price DECIMAL(10, 5),
-   product_id INT,
-   order_status BOOLEAN,
-   product_name STRING,
-   product_description STRING,
-   shipment_id INT,
-   origin STRING,
-   destination STRING,
-   is_arrived BOOLEAN,
+    order_id INT,
+    order_date TIMESTAMP(3),
+    customer_name STRING,
+    order_total DECIMAL(10, 5) ,
+    product_id INTEGER,
+    shipment_id INTEGER,
+    origin STRING,
+    order_status INTEGER, 
+    product_name STRING,
+    product_price DECIMAL(10, 5),
+    order_qty INTEGER,
+    product_description STRING,
+    destination STRING,
+    has_arrived BOOLEAN
    PRIMARY KEY (order_id) NOT ENFORCED ) ;
    
 SET 'pipeline.name' = 'Iceberg-enriched-orders-aws';
