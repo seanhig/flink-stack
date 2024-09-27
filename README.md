@@ -53,7 +53,7 @@ This builds the base image with all depdencies, which include:
 Once the stack is up and running you can shell into the `Flink-SQL client`:
 
 ```
-./sql-client.sh
+./sql.sh
 ```
  
 > Scaling the `taskmanager` can be done with `docker-compose scale taskmanager=3`.  Each taskmanager is configured to support 100 job slots.

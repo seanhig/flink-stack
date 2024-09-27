@@ -31,7 +31,7 @@ CREATE TABLE products (
     id INT,
     name STRING,
     description STRING,
-    product_price DECIMAL(10, 5),
+    price DECIMAL(10, 5),
     PRIMARY KEY (id) NOT ENFORCED
 )
 WITH (
@@ -101,7 +101,7 @@ CREATE TABLE enriched_orders (
     shipment_id INTEGER,
     origin STRING,
     destination STRING,
-    has_arrived BOOLEAN
+    has_arrived BOOLEAN,
     PRIMARY KEY (order_id) NOT ENFORCED
 )
 WITH (
@@ -120,7 +120,14 @@ SET 'pipeline.name' = 'MySQL-enriched_orders';
 -- Creates a streaming ETL job to provide real-time updates to the enriched_orders table
 INSERT INTO
     enriched_orders
-SELECT o.*, p.name, p.description, p.price, s.shipment_id, s.origin, s.destination, s.is_arrived
+SELECT o.*, 
+    p.name as product_name, 
+    p.description as product_description, 
+    p.price as product_price, 
+    s.shipment_id, 
+    s.origin, 
+    s.destination, 
+    s.has_arrived
 FROM
     orders AS o
     LEFT JOIN products AS p ON o.product_id = p.id

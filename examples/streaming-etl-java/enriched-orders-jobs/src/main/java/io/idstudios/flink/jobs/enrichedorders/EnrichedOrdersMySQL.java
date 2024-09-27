@@ -120,14 +120,14 @@ public class EnrichedOrdersMySQL extends FlinkJob {
                 "       order_total             DECIMAL(10, 5),\n" +
                 "       order_qty               INT,\n" +
                 "       product_id              INT,\n" +
-                "       order_status            BOOLEAN,\n" +
+                "       order_status            INT,\n" +
                 "       product_name            STRING,\n" +
                 "       product_description     STRING,\n" +
                 "       product_price           DECIMAL(10, 5),\n" +
                 "       shipment_id             INT,\n" +
                 "       origin                  STRING,\n" +
                 "       destination             STRING,\n" +
-                "       has_arrived              BOOLEAN,\n" +
+                "       has_arrived             BOOLEAN,\n" +
                 "       PRIMARY KEY (order_id) NOT ENFORCED\n" +
                 ") WITH (\n" +
                 "       'connector.type' = 'jdbc',\n" +
@@ -152,7 +152,7 @@ public class EnrichedOrdersMySQL extends FlinkJob {
         Table products = tEnv.from("products").select(
                 $("id").as("product_id"),
                 $("name").as("product_name"),
-                $("price").as("proudct_price"),
+                $("price").as("product_price"),
                 $("description").as("product_description"));
 
         Table shipments = tEnv.from("shipments").select(

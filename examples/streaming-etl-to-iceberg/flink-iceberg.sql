@@ -20,7 +20,7 @@ CREATE TABLE enriched_orders_cdc (
     shipment_id INTEGER,
     origin STRING,
     destination STRING,
-    has_arrived BOOLEAN
+    has_arrived BOOLEAN,
     PRIMARY KEY (order_id) NOT ENFORCED ) 
    WITH (
    'connector' = 'mysql-cdc',
@@ -53,16 +53,16 @@ CREATE TABLE enriched_orders_lake (
     order_date TIMESTAMP(3),
     customer_name STRING,
     order_total DECIMAL(10, 5) ,
+    order_qty INTEGER,
     product_id INTEGER,
-    shipment_id INTEGER,
-    origin STRING,
     order_status INTEGER, 
     product_name STRING,
-    product_price DECIMAL(10, 5),
-    order_qty INTEGER,
     product_description STRING,
+    product_price DECIMAL(10, 5),
+    shipment_id INTEGER,
+    origin STRING,
     destination STRING,
-    has_arrived BOOLEAN
+    has_arrived BOOLEAN,
    PRIMARY KEY (order_id) NOT ENFORCED ) ;
    
 SET 'pipeline.name' = 'Iceberg-enriched-orders-aws';

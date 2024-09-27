@@ -41,7 +41,7 @@ public class EnrichedOrdersIceberg extends FlinkJob {
                 "       order_total             DECIMAL(10, 5),\n" +
                 "       order_qty               INT,\n" +
                 "       product_id              INT,\n" +
-                "       order_status            BOOLEAN,\n" +
+                "       order_status            INT,\n" +
                 "       product_name            STRING,\n" +
                 "       product_description     STRING,\n" +
                 "       product_price           DECIMAL(10, 5),\n" +
@@ -117,7 +117,7 @@ public class EnrichedOrdersIceberg extends FlinkJob {
                 "       order_total             DECIMAL(10, 5),\n" +
                 "       order_qty               INT,\n" +
                 "       product_id              INT,\n" +
-                "       order_status            BOOLEAN,\n" +
+                "       order_status            INT,\n" +
                 "       product_name            STRING,\n" +
                 "       product_description     STRING,\n" +
                 "       product_price           DECIMAL(10, 5),\n" +

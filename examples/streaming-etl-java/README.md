@@ -58,7 +58,7 @@ The `docker compose` has these defined in the `.env` file.  For `k8s` this is de
 When manually pushing the `job jar` up to the local `flink-stack` docker compose environment (for testing and development), pass the following parameter as the `program arguments`:
 
 ```
---config-filepath /host/examples/streaming-etl-java/enriched-orders-jobs.properties
+--config-filepath /host/examples/streaming-etl-java/enriched-orders-jobs/enriched-orders-jobs.properties
 ```
 
 > for K8s deployment we use a ConfigMap to inject the properties file into the Flink Job container.
