@@ -70,6 +70,9 @@ Happy flinking!
 
 [k8s](examples/k8s/README.md) illustrates how to deploy the `Flink Kubernetes Operator` to a K8s cluster and then how to define a Job `YAML` declaration file that will deploy the `streaming-etl-java job jar` into a dedicated job flink cluster running in the Kubernetes environment.  This example also defines a workable configuration and secrets handling strategy for production deployments.
 
+[kafka](examples/kafka/README.md) implements a `Web Order` intake simulator using [Apache Kafka](), and a `weborder-processor` using Spring Boot, JPA and Kafka to generate incoming order volumes for Flink analysis and processing. 
+
+
 ## Flink Workflow
 Starting with `Flink SQL` and the sql client to prototype data flows using agile SQL statements is a great way to setup the structure of a job in development.  Then transcribing that job into a `Java` implementation and `Job JAR` for deployment to Kubernetes feels like a great workflow and platform for data movement and real time analytics.
 
