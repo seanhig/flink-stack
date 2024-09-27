@@ -25,3 +25,38 @@ data:
     postgres.shipdb.db.slotname=flink
 
     iceberg.s3.warehouse=s3a://ids-flink-demo-warehouse
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: weborders-configmap
+data:
+   weborder-jobs.properties: |-
+    mysql.erpdb.host.name=host.docker.internal
+    mysql.erpdb.db.name=erpdb
+    mysql.erpdb.db.port=3306
+    mysql.erpdb.db.username=root
+    mysql.erpdb.db.password=secret
+
+    mysql.opsdb.host.name=host.docker.internal
+    mysql.opsdb.db.name=operations
+    mysql.opsdb.db.port=3306
+    mysql.opsdb.db.username=root
+    mysql.opsdb.db.password=secret
+
+    postgres.shipdb.host.name=host.docker.internal
+    postgres.shipdb.schema.name=public
+    postgres.shipdb.db.name=shipdb
+    postgres.shipdb.db.port=5432
+    postgres.shipdb.db.username=postgres
+    postgres.shipdb.db.password=secret
+    postgres.shipdb.db.slotname=flink
+
+    iceberg.s3.warehouse=s3a://ids-flink-demo-warehouse
+
+    bootstrap.servers=host.docker.internal:29092
+    kafka.group.id=flink-weborder-processor
+    schema.registry.url=http://host.docker.internal:8081
+    auto.offset.reset.config=earliest
+    weborders.topic=weborders
+    

@@ -59,20 +59,29 @@ spec:
 #                name: flink-jobjars
             - name: flink-volume
               mountPath: /opt/flink/ha_data
-            - name: flink-job-configs
+            - name: flink-enriched-job-configs
               mountPath: "/flink-job-configs/enriched-orders-jobs.properties"
               subPath: "enriched-orders-jobs.properties"              
+            - name: flink-web-job-configs
+              mountPath: "/flink-job-configs/weborder-jobs.properties"
+              subPath: "weborder-jobs.properties"              
       volumes:
 #         - name: flink-jobjars
 #            hostPath:
 #              path: /Users/seanhig/Workspace/flink-stack/examples/k8s/ha_data
 #              type: DirectoryOrCreate
-        - name: flink-job-configs
+        - name: flink-enriched-job-configs
           configMap:
             name: enriched-orders-configmap
             items:
               - key: "enriched-orders-jobs.properties"
                 path: "enriched-orders-jobs.properties"
+        - name: flink-web-job-configs
+          configMap:
+            name: weborders-configmap
+            items:
+              - key: "weborder-jobs.properties"
+                path: "weborder-jobs.properties"
         - name: flink-volume
           persistentVolumeClaim:
             claimName: session-cluster-ha-data-pvc

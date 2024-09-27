@@ -1,0 +1,11 @@
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkSessionJob
+metadata:
+  name: kafka-weborders-monitor-job
+spec:
+  deploymentName: session-cluster
+  job:
+    jarURI: http://flink-jobjar-service/flink-jobjars/weborder-jobs-1.0.0.jar
+    entryClass: io.idstudios.flink.jobs.weborders.WebOrdersMonitor
+    parallelism: 2
+    upgradeMode: stateless

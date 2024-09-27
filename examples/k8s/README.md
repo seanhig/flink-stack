@@ -50,6 +50,8 @@ Next we build Flink `Job Image` container containing all the required dependenci
 build-images.sh
 ```
 
+> This assumes you have built all of the `Job JARs` in both the [streaming-etl-java/enriched-orders-jobs](../streaming-etl-java/enriched-orders-jobs/) and [kafka/weborder-jobs](../kafka/weborder-jobs/) projects.
+
 This builds the two docker images mentioned:
 
 1. `idstudios/flink-session-cluster:1.20`
@@ -57,9 +59,7 @@ This builds the two docker images mentioned:
 
 > __Note:__ the `idstudios/flink-session-cluster:1.20` job image is built on the base `idstudios/flink:1.20` docker flink image used by the `flink-stack`.  To have this properly tagged for re-use locally, run the [../../docker-images/flink/build-image.sh](../../docker-images/flink/build-image.sh). 
 
-> __Note:__ the JAR must be already `packaged` in the [streaming-etl-java](../streaming-etl-java/) example as it is dependent on that `Java job jar`.  If the image build errors out ensure that the JAR has been built and exists.
-
-The `idstudios/flink-jobjars:1.1` docker image now contains our job jar served up via `HTTP` within the K8s cluster.  This is important as the `Flink Kubernetes Operator` will pre-validate the `jarURI`, and so the job jars need to be accessible to both the operator pod and the `Session Cluster` instances. `Nginx` is used to serve up the `enriched-orders-jobs-1.0.0.jar` to the pods in the cluster.
+The `idstudios/flink-jobjars:1.1` docker image now contains our job jars served up via `HTTP` within the K8s cluster.  This is important as the `Flink Kubernetes Operator` will pre-validate the `jarURI`, and so the job jars need to be accessible to both the operator pod and the `Session Cluster` instances. `Nginx` is used to serve up the `enriched-orders-jobs-1.0.0.jar` to the pods in the cluster.
 
 > In production we would probably use something like S3 to host our job jars, but local `Nginx` keeps the dev environment simple.
 
@@ -132,8 +132,10 @@ session-cluster-78d69d988d-b65q7                1/1     Running   0          21m
 With the `Session Cluster` deployed and running, we can deploy the flink jobs:
 
 ```
-kubectl apply -f flink-jobs.yaml
+kubectl apply -f jobs
 ```
+
+> You can also deploy the jobs individually by specifying the `yaml` files one at a time.
 
 The browser console should now show our two jobs running.
 

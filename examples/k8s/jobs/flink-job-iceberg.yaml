@@ -1,18 +1,6 @@
 apiVersion: flink.apache.org/v1beta1
 kind: FlinkSessionJob
 metadata:
-  name: mysql-enriched-orders-job
-spec:
-  deploymentName: session-cluster
-  job:
-    jarURI: http://flink-jobjar-service/flink-jobjars/enriched-orders-jobs-1.0.0.jar
-    entryClass: io.idstudios.flink.jobs.EnrichedOrdersMySQL
-    parallelism: 2
-    upgradeMode: stateless
----
-apiVersion: flink.apache.org/v1beta1
-kind: FlinkSessionJob
-metadata:
   name: iceberg-enriched-orders-job
 spec:
   deploymentName: session-cluster
