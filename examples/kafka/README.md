@@ -11,6 +11,18 @@ The `weborders` generated to the Kafka topic can then be used for analysis in [A
 
 > Initial plan was to use `Flink SQL` to intake directly from Kafka into the `MySQL` and `Postgres` tables, but this revealed a current limitation in Flink.  Specifically, it is presently not possible to stream into a table with a database based IDENTITY column.  
 
+## Requirements
+
+- Docker
+- MySQL and PostgreSQL servers.  The [database-stack](https://github.com/seanhig/database-stack) was used in this example and works nicely.
+- The [kafka-stack](https://github.com/seanhig/database-stack/kafka-stack) that integrates with the `database-stack` network.
+- A running `flink-stack`
+- Azure Data Studio, JBeaver or any other client that can connect to MySQL and PostgreSQL.
+- Java JDK 17 or higher.
+- Maven 3+
+- Bash 
+
+> The integrated `conduktor` Kafka console in the [kafka-stack](https://github.com/seanhig/database-stack/kafka-stack) really makes Kafka development a pleasure.
 
 ## The Web Order Model
 The Web Order model is built using the [Apache Avro]() serialization format. This must be built and installed first as it is a depedency for the other two Spring projects:
@@ -65,4 +77,4 @@ Database configuration is found in the `weborder-processor.propertoes` file.
 ## The Flink Web Order Monitor
 The Flink Web Order Monitor can be installed into Flink to read from the Kafka topic and print the `WebOrder` messages in real time.  It serves as a template for reading Kafka topics and building stream analytics.  At the present time mostly a scaffold.
 
-> Working with Spring was a pleasure and there was always well documented solutions to real-world requirements.  I can't say the same about Flink, as counting String streams for a Word count makes for a lame set of sample code.  It was a time suck trying to deserialize Avro messages from Kafka within Flink (involving the Schema Registry to boot).  Avro is a pretty common use case in terms of Kafka SerDe.  JSON is less ideal in Kafka, so it is odd Confluent chose it for their examples.  Simple, but not practical. I traced the problem down to a `SpecificRecord.class.isAssignableFrom()` issue that oddly routes the serializer toward an invalid `GenericRecord` path and produces a near worthless `NullException` instead of throwing a helpful message about the `isAssignableFrom` issue... but digging in the Flink source is no fun. It would be nice to be able to work with Avro `WebOrder` objects in Flink, but so far the best I've been able to accomplish is the `GenericRecord` option.  `Flink SQL` had no problem reading the Avro schema, so I'm sure there is a formula somewhere in the code... it is a TODO.
+> Working with Spring was a pleasure and there was always well documented solutions to real-world requirements.  I can't say the same about Flink.  It was a challenge trying to deserialize Avro messages from Kafka within Flink (involving the Schema Registry). Not one example of this could be found. I traced the problem down to a `SpecificRecord.class.isAssignableFrom()` issue that oddly routes the serializer toward an invalid `GenericRecord` path in the `getProducerType` method and produces a near worthless `NullException` instead of throwing a helpful message about the `isAssignableFrom` issue... but digging in the Flink source is no fun. The few snippets available on `Stackoverflow` did not yield good results. It would be nice to be able to work with Avro `WebOrder` objects in Flink, but so far the best I've been able to accomplish is the `GenericRecord` option.  Oddly when referencing the same `model jar` as the Spring `producer and consumer`, the model class fails to deserialize. `Flink SQL` had no problem reading the Confluent Avro schema, so I'm sure there is a formula somewhere in the code... finding it is a TODO.  
