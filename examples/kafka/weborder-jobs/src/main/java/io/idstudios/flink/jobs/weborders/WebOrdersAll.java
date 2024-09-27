@@ -8,12 +8,11 @@ import org.slf4j.LoggerFactory;
 // Note that this is the class specified in the Maven shade plugin as the main class for the manifest, which is largely 
 // ignored by the FlinkSessionJob config
 public class WebOrdersAll {
-      private static final Logger log = LoggerFactory.getLogger(WebOrdersProcessor.class);
+      private static final Logger log = LoggerFactory.getLogger(WebOrdersAll.class);
       public static void main(String[] args) throws Exception {
 
         log.info("Running ALL WebOrders jobs...");
-
-        WebOrdersProcessor.main(args);
+        WebOrdersMonitor.main(args);
     }
 
 }

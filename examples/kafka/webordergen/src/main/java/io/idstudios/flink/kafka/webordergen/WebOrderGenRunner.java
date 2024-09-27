@@ -18,8 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 public class WebOrderGenRunner implements CommandLineRunner {
   private final WebOrderGen kafkaOrderGen;
 
-  @Autowired
-  KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+//  @Autowired
+//  KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
   @Override
   public void run(String... args) {
@@ -28,17 +28,11 @@ public class WebOrderGenRunner implements CommandLineRunner {
       WorkOrderGenOptions opts = WorkOrderGenOptions.getOpts(args);
       log.info("OPTIONS: {}", opts.toString());
 
-      if (opts.isGenerator()) {
-        log.info("GENERATOR: Generating Mock WebOrder kafka messages...");
-        kafkaOrderGen.generateMockWebOrders(opts.getOrderCount(),
-            opts.getBatchSizeMax(),
-            opts.getOrderPauseMax(),
-            opts.getBatchPauseMax());
-      } else {
-        // Monitor mode
-        log.info("MONITOR: Fetching Mock WebOrder kafka messages...");
-        this.startListener(WebOrderMonitor.LISTENER_ID);
-      }
+      log.info("GENERATOR: Generating Mock WebOrder kafka messages...");
+      kafkaOrderGen.generateMockWebOrders(opts.getOrderCount(),
+          opts.getBatchSizeMax(),
+          opts.getOrderPauseMax(),
+          opts.getBatchPauseMax());
     } catch (UnrecognizedOptionException oex) {
       log.error(oex.getMessage());
     } catch (ParseException pex) {
@@ -47,6 +41,7 @@ public class WebOrderGenRunner implements CommandLineRunner {
 
   }
 
+  /*
   private boolean startListener(String listenerId) {
     MessageListenerContainer listenerContainer = kafkaListenerEndpointRegistry.getListenerContainer(listenerId);
     assert listenerContainer != null : false;
@@ -62,4 +57,5 @@ public class WebOrderGenRunner implements CommandLineRunner {
     log.info("{} Kafka Listener Stopped.", listenerId);
     return true;
   }
+  */
 }

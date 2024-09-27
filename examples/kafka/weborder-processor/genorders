@@ -1,0 +1,1 @@
+java -jar target/webordergen-0.0.1-SNAPSHOT.jar -mode gen -count 5000 -batchsizemax 500 -orderpausemax 3 -batchpausemax 10

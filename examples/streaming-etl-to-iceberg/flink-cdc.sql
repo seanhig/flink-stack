@@ -1,7 +1,7 @@
 -- Set options
 SET execution.checkpointing.interval = 30s;
 
-SET sql - client.execution.result - mode = 'tableau';
+SET sql-client.execution.result-mode = 'tableau' ;
 
 SET 'sql-client.verbose' = 'true';
 

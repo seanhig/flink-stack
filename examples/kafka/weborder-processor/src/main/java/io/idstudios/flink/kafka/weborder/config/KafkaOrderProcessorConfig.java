@@ -1,4 +1,4 @@
-package io.idstudios.flink.kafka.webordergen.config;
+package io.idstudios.flink.kafka.weborder.config;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 @Configuration
 @EnableKafka
 @AllArgsConstructor
-public class KafkaOrderMonitorConfig {
+public class KafkaOrderProcessorConfig {
   
   @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(KafkaProperties kafkaProperties) {

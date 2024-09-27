@@ -12,7 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
-import io.idstudios.flink.kafka.webordergen.model.WebOrder;
+import io.idstudios.flink.models.WebOrder;
 import io.idstudios.flink.kafka.webordergen.properties.KafkaCustomProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -93,20 +93,22 @@ public class WebOrderGen {
             int pauseSecs = r.nextInt(pauseRange);
             int batchPauseSecs = r.nextInt(batchPauseRange);
 
-            int batch = r.nextInt(maxBatchSize);
-            if (batch > count) {
-                batch = count;
+            int batchSize = r.nextInt(maxBatchSize);
+            if (batchSize > count) {
+                batchSize = count;
+            } else if (batchSize == 0) {
+                batchSize = maxBatchSize / 2;
             }
 
-            log.info("generating batch of  [" + batch + "] web orders out of [" + count + "]");
-            for (var i = 0; i < batch; i++) {
+            log.info("generating batch of [" + batchSize + "] web orders out of remaining[" + count + "]");
+            log.info("pausing for " + pauseSecs + " seconds between orders...");
+            for (var i = 0; i < batchSize; i++) {
                 this.sendMessage(getMockWebOrder());
-                log.info("pausing for " + pauseSecs + " seconds between orders...");
                 pause(pauseSecs);
                 count--;
             }
             if (count > 0) {
-                log.info("pausing between batches [" + batch + "] for " + pauseSecs + " seconds...");
+                log.info("pausing between batches for " + batchPauseSecs + " seconds...");
                 pause(batchPauseSecs);
             }
         }
@@ -125,7 +127,7 @@ public class WebOrderGen {
         ProducerRecord<String, WebOrder> producerRecord = new ProducerRecord<>(
                 kafkaCustomProperties.getWebOrdersTopic(), orderEvent.getCustomerName(), orderEvent);
         CompletableFuture<SendResult<String, WebOrder>> completableFuture = kafkaTemplate.send(producerRecord);
-        log.info("Sending kafka message on topic: {}", kafkaCustomProperties.getWebOrdersTopic());
+        //log.info("Sending kafka message on topic: {}", kafkaCustomProperties.getWebOrdersTopic());
 
         completableFuture.whenComplete((result, ex) -> {
             if (ex == null) {

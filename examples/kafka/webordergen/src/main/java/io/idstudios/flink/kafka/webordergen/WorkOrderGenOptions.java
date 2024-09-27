@@ -8,11 +8,10 @@ import org.apache.commons.cli.ParseException;
 
 public class WorkOrderGenOptions {
 
-  private boolean isGenerator = false;
-  private int orderCount = 30;
-  private int batchSizeMax = 10;
-  private int pauseSecondMax = 5;
-  private int batchPauseSecondMax = 10;
+  private int orderCount = 50;
+  private int batchSizeMax = 25;
+  private int pauseSecondMax = 3;
+  private int batchPauseSecondMax = 5;
 
   public static WorkOrderGenOptions getOpts(String[] args) throws ParseException{
     return new WorkOrderGenOptions(args);
@@ -20,7 +19,6 @@ public class WorkOrderGenOptions {
   
   public WorkOrderGenOptions(String[] args) throws ParseException{
     Options options = new Options();
-    options.addOption("mode", true, "generator or monitor");
     options.addOption("count", true, "number of orders to generate");
     options.addOption("batchsizemax", true, "number of orders to generate in each batch");
     options.addOption("orderpausemax", true, "max seconds to pause between orders");
@@ -29,20 +27,10 @@ public class WorkOrderGenOptions {
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd = parser.parse(options, args);
 
-    if(!cmd.hasOption("mode")
-      || (!cmd.getOptionValue("mode").startsWith("gen") && !cmd.getOptionValue("mode").startsWith("mon"))) {
-      throw new ParseException("The `mode` option is required and must be specified as either `generator` or `monitor`!");
-    }
-
-    this.isGenerator = cmd.getOptionValue("mode").toLowerCase().startsWith("gen") ? true: false;
     this.orderCount = cmd.hasOption("count") ? Integer.parseInt(cmd.getOptionValue("count")) : this.orderCount;
     this.batchSizeMax = cmd.hasOption("batchsizemax") ? Integer.parseInt(cmd.getOptionValue("batchsizemax")) : this.batchSizeMax;
     this.pauseSecondMax = cmd.hasOption("orderpausemax") ? Integer.parseInt(cmd.getOptionValue("orderpausemax")) : this.pauseSecondMax;
     this.batchPauseSecondMax = cmd.hasOption("batchpausemax") ? Integer.parseInt(cmd.getOptionValue("batchpausemax")) : this.batchPauseSecondMax;    
-  }
-
-  public boolean isGenerator() {
-    return this.isGenerator;
   }
 
   public int getOrderCount() {
@@ -62,16 +50,11 @@ public class WorkOrderGenOptions {
   }
 
   public String toString() {
-    if(this.isGenerator()) {
-      return String.format("Mode: generator, Count: %d, BatchMax: %d, PauseSecMax: %d, BatchPauseSecMax: %d",
+      return String.format("GENERATOR: Count: %d, BatchMax: %d, PauseSecMax: %d, BatchPauseSecMax: %d",
       this.getOrderCount(),
       this.getBatchSizeMax(),
       this.getOrderPauseMax(), 
       this.getBatchPauseMax());
-    } else {
-      return String.format("Mode: monitor");
-    }
-
   }
 
 }

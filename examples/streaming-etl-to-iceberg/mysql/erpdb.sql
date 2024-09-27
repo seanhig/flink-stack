@@ -22,15 +22,16 @@ VALUES (default,"scooter","Small 2-wheel scooter", 107.00),
 
 CREATE TABLE orders (
   order_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  order_ref VARCHAR(255) NULL,
   order_date DATETIME NOT NULL,
   customer_name VARCHAR(255) NOT NULL,
   order_total DECIMAL(10, 5) NOT NULL,
-  qty INTEGER NOT NULL,
+  order_qty INTEGER NOT NULL,
   product_id INTEGER NOT NULL,
   order_status INTEGER NOT NULL 
 ) AUTO_INCREMENT = 10001;
 
 INSERT INTO orders
-VALUES (default, '2020-07-30 10:08:22', 'Jark', 85.99, 1, 102, 0),
-       (default, '2020-07-30 10:11:09', 'Sally', 13.50, 1, 105, 0),
-       (default, '2020-07-30 12:00:30', 'Edward', 15.25, 1, 106, 0);
+VALUES (default, 'POS', '2020-07-30 10:08:22', 'Jark', 85.99, 1, 102, 0),
+       (default, 'POS', '2020-07-30 10:11:09', 'Sally', 13.50, 1, 105, 0),
+       (default, 'POS', '2020-07-30 12:00:30', 'Edward', 15.25, 1, 106, 0);

@@ -9,7 +9,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import io.idstudios.flink.kafka.webordergen.model.WebOrder;
+import io.idstudios.flink.models.WebOrder;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
