@@ -1,6 +1,8 @@
 # Kafka Web Orders Processing with Flink, Avro, Spring Boot and Spring JPA / Kafka
 This example explores Flink development with Kafka.
 
+![Added Kafka Front End](images/Lake-flink-stack-with-kafka.png)
+
 The `webordergen` is a Spring Boot Kafka application that generates fake orders at a pre-defined pace and places them on an [Apache Kafka]() topic in [Apache Avro]() format to simulate an online web application order system.
 
 The `weborder-processor`is a Spring Boot Kafka and JPA application that consumes messages from the `weborders` Kafka topic and writes them to the `MySQL Orders` and `Postgres Shipments` tables respectively.
