@@ -1,6 +1,7 @@
 
 services:
   sql-client:
+    image: idstudios/flink:1.20
     build: ./docker-images/flink
     container_name: 'sql-client'
     restart: always
@@ -29,6 +30,7 @@ services:
 
   jobmanager:
     container_name: 'jobmanager'
+    image: idstudios/flink:1.20
     build: ./docker-images/flink
     restart: always
     ports:
@@ -60,6 +62,7 @@ services:
       - ./data/:/data
 
   taskmanager:
+    image: idstudios/flink:1.20
     build: ./docker-images/flink
     restart: always
     depends_on:

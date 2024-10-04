@@ -87,6 +87,7 @@
       <groupId>io.idstudios.flink.models</groupId>
       <artifactId>weborder-model</artifactId>
       <version>1.0.0</version>
+			<scope>provided</scope>
     </dependency>
 
 		<dependency>
@@ -114,6 +115,28 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+
+		<!-- Doesn't work
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.2</version>
+				<executions>
+					<execution>
+						<id>go-offline</id>
+						<phase>package</phase>
+						<goals>
+							<goal>go-offline</goal>
+						</goals>
+						<configuration>
+							<excludeGroupIds>io.idstudios.flink.model</excludeGroupIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			-->			
+	
 		</plugins>
 	</build>
 

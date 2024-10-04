@@ -1,0 +1,12 @@
+services:
+  weborder-processor:
+    image: idstudios/weborder-processor:1.0.0
+    build: .
+    container_name: 'weborder-processor'
+    restart: always
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP-SERVERS=http://host.docker.internal:29092
+      - SPRING_KAFKA_PRODUCER_PROPERTIES_SCHEMA_REGISTRY_URL=http://host.docker.internal:8081
+      - SPRING_KAFKA_CONSUMER_PROPERTIES_SCHEMA_REGISTRY_URL=http://host.docker.internal:8081
+      - SPRING_ERPDB_DATASOURCE_JDBCURL=jdbc:mysql://host.docker.internal:3306/erpdb
+      - SPRING_SHIPDB_DATASOURCE_JDBCURL=jdbc:postgresql://host.docker.internal:5432/shipdb
